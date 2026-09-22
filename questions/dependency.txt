@@ -1,0 +1,320 @@
+========================================
+DEPENDENCY - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+A parking lot charges different rates depending on business rules that change
+often. Write `ParkingLot` so that it receives a pricing strategy through its
+constructor instead of constructing one internally, then implement two
+strategies and swap between them without editing `ParkingLot`.
+Note: a dependency is more than "class A mentions class B" - specifically, A
+uses B without owning it or storing it as part of its own structure. State
+whether the strategy held on `self` here is a dependency or an association, and
+defend your answer.
+Evaluate the time and space complexity of `calculate_fee()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from abc import ABC, abstractmethod
+
+class PricingStrategy(ABC):
+    pass
+
+class HourlyPricing(PricingStrategy):
+    pass
+
+class FlatRatePricing(PricingStrategy):
+    pass
+
+class ParkingLot:
+    def __init__(self, pricing_strategy):
+        pass
+
+    def calculate_fee(self, hours):
+        pass
+```
+
+Example Usage:
+
+```
+lot = ParkingLot(HourlyPricing(2.50))
+print(lot.calculate_fee(4))
+lot = ParkingLot(FlatRatePricing(8.00))
+print(lot.calculate_fee(4))
+print(lot.calculate_fee(12))
+```
+
+Example Output:
+
+```
+10.0
+8.0
+8.0
+```
+
+
+PROBLEM 2
+---------
+The class below cannot be unit tested without a live network connection and a
+real API key. Identify exactly which line causes that, then rewrite the class so
+the gateway is injected. Finally, write a `FakeGateway` and a test function that
+asserts the charge amount without any network call.
+Note: name the principle being violated and say which direction the dependency
+currently points versus which direction it should point.
+
+```
+class StripeGateway:
+    def __init__(self, api_key):
+        self.api_key = api_key
+
+    def charge(self, amount):
+        # imagine an HTTP call here
+        return f"charged {amount} via stripe"
+
+class OrderProcessor:
+    def __init__(self):
+        self.gateway = StripeGateway(api_key="sk_live_abc123")
+
+    def process(self, total):
+        return self.gateway.charge(total)
+
+class FakeGateway:
+    pass
+
+def test_process_charges_total():
+    pass
+```
+
+Example Usage:
+
+```
+test_process_charges_total()
+print("all tests passed")
+```
+
+Example Output:
+
+```
+all tests passed
+```
+
+
+PROBLEM 3
+---------
+Not every dependency belongs in the constructor. Write an `Invoice` class whose
+`total()` method takes a tax calculator as an ARGUMENT rather than storing one
+on the instance. Implement two calculators and call `total()` with each on the
+same invoice object.
+Note: this is a method-level (parameter) dependency. Explain in one or two
+sentences when you would choose this over constructor injection, and what it
+implies about how long the collaborator is needed.
+Evaluate the time and space complexity of `total()`. Define your variables and
+provide a rationale for why you believe your solution has the stated time and
+space complexity.
+
+```
+class FlatTax:
+    def __init__(self, rate):
+        pass
+
+    def apply(self, subtotal):
+        pass
+
+class NoTax:
+    def apply(self, subtotal):
+        pass
+
+class Invoice:
+    def __init__(self, line_items):
+        pass
+
+    def subtotal(self):
+        pass
+
+    def total(self, tax_calculator):
+        pass
+```
+
+Example Usage:
+
+```
+inv = Invoice([("widget", 2, 10.00), ("gadget", 1, 5.00)])
+print(inv.subtotal())
+print(inv.total(FlatTax(0.07)))
+print(inv.total(NoTax()))
+```
+
+Example Output:
+
+```
+25.0
+26.75
+25.0
+```
+
+
+PROBLEM 4
+---------
+Write an abstract `NotificationSender` with a method `send(recipient, message)`,
+two implementations (email and SMS), and a `TicketService` that depends on the
+abstraction and notifies on ticket issue. Then add a third sender - push
+notifications - without modifying `TicketService` or either existing sender.
+Note: after adding the third, state which SOLID letter you just demonstrated and
+which one the injection itself demonstrates. They are two different letters.
+
+```
+from abc import ABC, abstractmethod
+
+class NotificationSender(ABC):
+    pass
+
+class EmailSender(NotificationSender):
+    pass
+
+class SMSSender(NotificationSender):
+    pass
+
+class TicketService:
+    def __init__(self, sender):
+        pass
+
+    def issue(self, ticket_id, recipient):
+        pass
+```
+
+Example Usage:
+
+```
+svc = TicketService(EmailSender())
+print(svc.issue("T1", "ana@example.com"))
+svc = TicketService(SMSSender())
+print(svc.issue("T2", "+15550001111"))
+```
+
+Example Output:
+
+```
+EMAIL to ana@example.com: Ticket T1 issued
+SMS to +15550001111: Ticket T2 issued
+```
+
+
+PROBLEM 5
+---------
+Write a `ReportBuilder` whose `build()` method has a dependency on `Summary`
+that exists ONLY through the return type - `ReportBuilder` never stores a
+`Summary`, never takes one as a parameter, and never subclasses it.
+Note: describe how this relationship is drawn in UML and why it is still a real
+dependency even though no reference survives the method call.
+State what would have to change for this to become an association instead.
+
+```
+class Summary:
+    def __init__(self, total, count):
+        pass
+
+    def __repr__(self):
+        pass
+
+class ReportBuilder:
+    def build(self, rows):
+        pass
+```
+
+Example Usage:
+
+```
+rb = ReportBuilder()
+print(rb.build([10, 20, 30]))
+print(hasattr(rb, "summary"))
+```
+
+Example Output:
+
+```
+Summary(total=60, count=3)
+False
+```
+
+
+PROBLEM 6
+---------
+`ParkingLot` needs `Ticket` and `Ticket` needs `ParkingLot`, which makes the two
+modules impossible to import independently. Write the broken version, confirm
+the failure, then fix it two different ways: once by introducing an abstraction
+that both depend on, and once by passing the lot in as a method argument instead
+of storing it.
+Note: name both techniques. Then say which one you would use if `Ticket` needed
+the lot in four different methods rather than one.
+
+```
+# Version A: broken (both classes reference each other at construction)
+
+# Version B: fixed with an abstraction
+
+# Version C: fixed with a method-level parameter
+```
+
+Example Usage:
+
+```
+lot = ParkingLot("Downtown")
+t = lot.issue_ticket("A1")
+print(t.ticket_id)
+print(t.close(lot))
+```
+
+Example Output:
+
+```
+T1
+Ticket T1 closed at Downtown
+```
+
+
+PROBLEM 7
+---------
+Given the four relationship types, write a function `classify()` that takes a
+short description string and returns the relationship name. Then run it against
+the cases below and check your answers against your own reasoning.
+Note: this is a thinking exercise disguised as a function. The real deliverable
+is the ranking - order the four from weakest to strongest coupling and give a
+one-line justification for each position.
+State the single question you would ask to distinguish aggregation from
+composition, and the single question to distinguish association from dependency.
+
+```
+def classify(description):
+    pass
+
+CASES = [
+    "University has Departments; closing the university closes them",
+    "Department has Professors; professors stay employed if it closes",
+    "Professor teaches Course; neither owns the other",
+    "OrderService calls EmailValidator inside one method and discards it",
+    "Book has Pages",
+    "ChessBoard has Squares",
+    "Square holds a Piece that moves between squares",
+    "ReportService returns a Summary it does not keep",
+]
+```
+
+Example Usage:
+
+```
+for c in CASES:
+    print(f"{classify(c):12} | {c}")
+```
+
+Example Output:
+
+```
+composition  | University has Departments; closing the university closes them
+aggregation  | Department has Professors; professors stay employed if it closes
+association  | Professor teaches Course; neither owns the other
+dependency   | OrderService calls EmailValidator inside one method and discards it
+...
+```

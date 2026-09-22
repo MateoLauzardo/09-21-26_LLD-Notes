@@ -1,0 +1,304 @@
+========================================
+ENUMS - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+User input arrives as raw strings with inconsistent capitalization. Write a
+function `parse_vehicle_type()` that takes a string and returns the matching
+`VehicleType` member, ignoring case and surrounding whitespace. If the string
+matches no member, raise a `ValueError` naming the bad input.
+Note: match on the member's VALUE, not its name.
+Evaluate the time and space complexity of your solution. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from enum import Enum
+
+class VehicleType(Enum):
+    MOTORCYCLE = "motorcycle"
+    CAR = "car"
+    TRUCK = "truck"
+
+def parse_vehicle_type(raw):
+    pass
+```
+
+Example Usage:
+
+```
+print(parse_vehicle_type("  Car "))
+print(parse_vehicle_type("TRUCK"))
+print(parse_vehicle_type("boat"))
+```
+
+Example Output:
+
+```
+VehicleType.CAR
+VehicleType.TRUCK
+ValueError: 'boat' is not a valid VehicleType
+```
+
+
+PROBLEM 2
+---------
+Given a list of `Order` objects, write a function `count_by_status()` that
+returns a dictionary mapping every member of `OrderStatus` to the number of
+orders in that state. Statuses with zero orders must still appear with a count
+of 0.
+Note: do not hardcode the list of statuses - derive it from the enum itself.
+Evaluate the time and space complexity of your solution. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from enum import Enum
+
+class OrderStatus(Enum):
+    PLACED = "placed"
+    SHIPPED = "shipped"
+    DELIVERED = "delivered"
+    CANCELLED = "cancelled"
+
+class Order:
+    def __init__(self, order_id, status):
+        self.order_id = order_id
+        self.status = status
+
+def count_by_status(orders):
+    pass
+```
+
+Example Usage:
+
+```
+orders = [
+    Order(1, OrderStatus.PLACED),
+    Order(2, OrderStatus.SHIPPED),
+    Order(3, OrderStatus.PLACED),
+]
+print(count_by_status(orders))
+```
+
+Example Output:
+
+```
+{<OrderStatus.PLACED: 'placed'>: 2, <OrderStatus.SHIPPED: 'shipped'>: 1, <OrderStatus.DELIVERED: 'delivered'>: 0, <OrderStatus.CANCELLED: 'cancelled'>: 0}
+```
+
+
+PROBLEM 3
+---------
+An enum member can carry more than one piece of data. Define `VehicleType` so
+that each member knows both a human-readable label and the number of parking
+spots that vehicle consumes. Then write `spots_required()`, which takes a list
+of `VehicleType` members and returns the total spots needed.
+Note: give each member a tuple value and unpack it in `__init__`. `self._value_`
+controls what `.value` returns.
+Evaluate the time and space complexity of `spots_required()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from enum import Enum
+
+class VehicleType(Enum):
+    # MOTORCYCLE = ("Motorcycle", 1)
+    # CAR = ("Car", 1)
+    # TRUCK = ("Truck", 2)
+    pass
+
+def spots_required(vehicles):
+    pass
+```
+
+Example Usage:
+
+```
+print(VehicleType.TRUCK.label)
+print(VehicleType.TRUCK.spots)
+print(spots_required([VehicleType.CAR, VehicleType.TRUCK, VehicleType.MOTORCYCLE]))
+```
+
+Example Output:
+
+```
+Truck
+2
+4
+```
+
+
+PROBLEM 4
+---------
+Enums can have methods. Add a method `is_terminal()` to `TicketStatus` that
+returns `True` only for states no further transition can leave. Then write a
+function `active_tickets()` that filters a list of tickets down to the
+non-terminal ones.
+Note: the method lives on the enum class itself and `self` is the member.
+Evaluate the time and space complexity of `active_tickets()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from enum import Enum
+
+class TicketStatus(Enum):
+    ISSUED = "issued"
+    ACTIVE = "active"
+    PAID = "paid"
+    LOST = "lost"
+
+    def is_terminal(self):
+        pass
+
+class Ticket:
+    def __init__(self, ticket_id, status):
+        self.ticket_id = ticket_id
+        self.status = status
+
+def active_tickets(tickets):
+    pass
+```
+
+Example Usage:
+
+```
+print(TicketStatus.PAID.is_terminal())
+print(TicketStatus.ACTIVE.is_terminal())
+
+tickets = [Ticket("T1", TicketStatus.ACTIVE), Ticket("T2", TicketStatus.PAID)]
+print([t.ticket_id for t in active_tickets(tickets)])
+```
+
+Example Output:
+
+```
+True
+False
+['T1']
+```
+
+
+PROBLEM 5
+---------
+A ticket may only move through its lifecycle in one direction. Write a function
+`advance()` that takes a `TicketStatus` and returns the next status in the
+sequence ISSUED -> ACTIVE -> PAID. If the status is already terminal, raise a
+`ValueError`.
+Note: express the allowed transitions as data, not as a chain of if/elif. Adding
+a new state should not require rewriting the function body.
+Evaluate the time and space complexity of your solution. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from enum import Enum
+
+class TicketStatus(Enum):
+    ISSUED = "issued"
+    ACTIVE = "active"
+    PAID = "paid"
+
+def advance(status):
+    pass
+```
+
+Example Usage:
+
+```
+print(advance(TicketStatus.ISSUED))
+print(advance(TicketStatus.ACTIVE))
+print(advance(TicketStatus.PAID))
+```
+
+Example Output:
+
+```
+TicketStatus.ACTIVE
+TicketStatus.PAID
+ValueError: TicketStatus.PAID is a terminal state
+```
+
+
+PROBLEM 6
+---------
+The code below runs without raising, which is exactly the problem. Identify
+every defect, then rewrite `get_rate()` so that an unrecognized spot type fails
+loudly instead of silently returning `None`.
+Note: there are three separate issues - one typo, one missing branch, and one
+design flaw that the first two are symptoms of.
+State what the design flaw is and explain how converting to an enum eliminates
+all three defects at once.
+
+```
+def get_rate(spot_type):
+    if spot_type == "compact":
+        return 2.00
+    elif spot_type == "large":
+        return 4.00
+    elif spot_type == "handicaped":
+        return 0.00
+
+def get_rate_fixed(spot_type):
+    pass
+```
+
+Example Usage:
+
+```
+print(get_rate("compact"))
+print(get_rate("handicapped"))
+print(get_rate("motorcycle"))
+```
+
+Example Output:
+
+```
+2.0
+None
+None
+```
+
+
+PROBLEM 7
+---------
+Write a function `duplicate_values()` that takes an `Enum` class and returns a
+list of the member names that are aliases - that is, names bound to a value some
+earlier member already claimed.
+Note: iterating an enum with `for m in MyEnum` skips aliases. `MyEnum.__members__`
+does not.
+Evaluate the time and space complexity of your solution. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from enum import Enum
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    CRIMSON = 1
+    BLUE = 3
+    SCARLET = 1
+
+def duplicate_values(enum_cls):
+    pass
+```
+
+Example Usage:
+
+```
+print(len(Color))
+print(duplicate_values(Color))
+```
+
+Example Output:
+
+```
+3
+['CRIMSON', 'SCARLET']
+```

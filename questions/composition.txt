@@ -1,0 +1,329 @@
+========================================
+COMPOSITION - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+A parking floor owns its spots. Nobody hands spots to a floor and no spot moves
+between floors. Implement `ParkingFloor` so that it takes a count and a spot
+type, BUILDS its own spots, and never exposes the raw list. The only way to get
+at a spot is through `find_available_spot(vehicle_type)`, which returns the
+first empty spot that fits or `None`.
+Note: composition is more than a list of parts - specifically, the whole creates
+the parts and no external caller can reach in and mutate the collection.
+Evaluate the time and space complexity of `find_available_spot()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from enum import Enum
+
+class VehicleType(Enum):
+    MOTORCYCLE = "motorcycle"
+    CAR = "car"
+    TRUCK = "truck"
+
+class ParkingSpot:
+    def __init__(self, spot_id, vehicle_type):
+        self.spot_id = spot_id
+        self.vehicle_type = vehicle_type
+        self.occupied = False
+
+class ParkingFloor:
+    def __init__(self, number, spot_counts):
+        pass
+
+    def find_available_spot(self, vehicle_type):
+        pass
+
+    def occupancy(self):
+        pass
+```
+
+Example Usage:
+
+```
+floor = ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
+spot = floor.find_available_spot(VehicleType.CAR)
+print(spot.spot_id)
+spot.occupied = True
+print(floor.find_available_spot(VehicleType.CAR).spot_id)
+print(floor.occupancy())
+```
+
+Example Output:
+
+```
+1-CAR-1
+1-CAR-2
+1/3
+```
+
+
+PROBLEM 2
+---------
+An order owns its line items. A line item has no meaning outside the order that
+created it, and deleting the order deletes them. Implement `Order` so that
+callers CANNOT construct an `OrderLine` and hand it in - the only way to add one
+is `add_line(product, qty, unit_price)`.
+Note: make the constraint real in code, not just a comment. Then write one
+sentence explaining why forcing creation through `add_line` is what makes this
+composition rather than aggregation.
+Evaluate the time and space complexity of `total()`. Define your variables and
+provide a rationale for why you believe your solution has the stated time and
+space complexity.
+
+```
+class Order:
+    def __init__(self, order_id):
+        pass
+
+    def add_line(self, product, qty, unit_price):
+        pass
+
+    def remove_line(self, product):
+        pass
+
+    def total(self):
+        pass
+
+    def line_count(self):
+        pass
+```
+
+Example Usage:
+
+```
+o = Order("O1")
+o.add_line("widget", 2, 9.99)
+o.add_line("gadget", 1, 24.50)
+print(o.line_count())
+print(o.total())
+o.remove_line("widget")
+print(o.total())
+```
+
+Example Output:
+
+```
+2
+44.48
+24.5
+```
+
+
+PROBLEM 3
+---------
+The class below claims composition but leaks its part. Show the leak by
+reproducing the example below, then rewrite `Car` so that discarding the car
+genuinely invalidates the engine.
+Note: Python will not cascade-delete for you. You must enforce composition
+semantics yourself. Implement `dispose()` so that any method call on a disposed
+engine raises a `RuntimeError`, and explain why exposing the part at all was the
+original mistake.
+
+```
+class Engine:
+    def __init__(self, hp):
+        self.hp = hp
+
+    def start(self):
+        return f"vroom ({self.hp}hp)"
+
+class Car:
+    def __init__(self, hp):
+        self.engine = Engine(hp)
+
+    def get_engine(self):
+        return self.engine
+
+    def dispose(self):
+        pass
+```
+
+Example Usage:
+
+```
+c = Car(300)
+e = c.get_engine()
+print(e.start())
+c.dispose()
+print(e.start())
+```
+
+Example Output:
+
+```
+vroom (300hp)
+RuntimeError: Engine has been disposed
+```
+
+
+PROBLEM 4
+---------
+The hierarchy below doubles in size every time a new ability is added. Rewrite
+it using composition so that a bird HOLDS its behaviors instead of inheriting
+them, and show a bird acquiring the ability to fly at runtime - something the
+inheritance version cannot do.
+Note: name the specific problem the inheritance version has, and count how many
+classes you would need for five independent abilities under each approach.
+
+```
+class Bird: ...
+class FlyingBird(Bird): ...
+class SwimmingBird(Bird): ...
+class FlyingSwimmingBird(FlyingBird, SwimmingBird): ...
+
+class Bird:
+    def __init__(self, name, fly_behavior=None, swim_behavior=None):
+        pass
+
+    def describe(self):
+        pass
+```
+
+Example Usage:
+
+```
+penguin = Bird("Penguin", swim_behavior=CanSwim())
+print(penguin.describe())
+duck = Bird("Duck", fly_behavior=CanFly(), swim_behavior=CanSwim())
+print(duck.describe())
+penguin.fly_behavior = CanFly()
+print(penguin.describe())
+```
+
+Example Output:
+
+```
+Penguin: swims
+Duck: flies, swims
+Penguin: flies, swims
+```
+
+
+PROBLEM 5
+---------
+Implement a `Character` composed of an optional `Weapon`, `Armor`, and a list of
+`Ability` objects, all created and owned by the character's factory method
+`create()`. Write `attack()`, which returns total damage, and `equip()`, which
+swaps a weapon and destroys the old one.
+Note: the old weapon must be unusable after the swap. State whether the
+character's abilities are composition or aggregation under YOUR design, and
+defend the choice - both answers are defensible, but only with a reason.
+Evaluate the time and space complexity of `attack()`. Define your variables and
+provide a rationale for why you believe your solution has the stated time and
+space complexity.
+
+```
+class Weapon:
+    def __init__(self, name, damage):
+        pass
+
+class Ability:
+    def __init__(self, name, bonus):
+        pass
+
+class Character:
+    @classmethod
+    def create(cls, name, weapon_spec, ability_specs):
+        pass
+
+    def equip(self, weapon_spec):
+        pass
+
+    def attack(self):
+        pass
+```
+
+Example Usage:
+
+```
+hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
+print(hero.attack())
+old = hero.weapon
+hero.equip(("axe", 15))
+print(hero.attack())
+print(old.damage)
+```
+
+Example Output:
+
+```
+17
+22
+RuntimeError: Weapon sword has been destroyed
+```
+
+
+PROBLEM 6
+---------
+Classify each relationship below as composition, aggregation, or association,
+and write a one-line justification for each using the lifetime test. Then
+implement the two you marked composition, proving in your example usage that the
+parts do not survive the whole.
+Note: two of these five are genuinely debatable. Identify which two and say what
+additional requirement would settle each one.
+
+```
+# a) ParkingLot  -> ParkingFloor
+# b) ParkingFloor -> ParkingSpot
+# c) ParkingSpot -> Vehicle
+# d) Ticket      -> ParkingSpot
+# e) ParkingLot  -> Attendant
+```
+
+Example Usage:
+
+```
+# Write your own demonstration for the two composition relationships.
+```
+
+Example Output:
+
+```
+# Your demonstration should print evidence that the part is
+# unreachable or unusable once the whole is gone.
+```
+
+
+PROBLEM 7
+---------
+A `Ticket` needs to record what vehicle was parked. Implement TWO versions: one
+where `Ticket` composes a `Vehicle` object it constructs itself, and one where
+it stores only the license plate string.
+Note: write both, then answer - which version would you ship for a parking lot
+where a car may be re-parked ten times a week, and why? Name one specific bug
+the losing version invites.
+Evaluate the space complexity of storing one million tickets under each version.
+Define your variables and provide a rationale.
+
+```
+class Vehicle:
+    def __init__(self, plate, vehicle_type):
+        self.plate = plate
+        self.vehicle_type = vehicle_type
+
+class TicketComposed:
+    def __init__(self, ticket_id, plate, vehicle_type):
+        pass
+
+class TicketByPlate:
+    def __init__(self, ticket_id, plate):
+        pass
+```
+
+Example Usage:
+
+```
+t1 = TicketComposed("T1", "ABC123", "car")
+t2 = TicketByPlate("T2", "ABC123")
+print(t1.vehicle.plate, t2.plate)
+```
+
+Example Output:
+
+```
+ABC123 ABC123
+```

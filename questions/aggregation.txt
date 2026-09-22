@@ -1,0 +1,286 @@
+========================================
+AGGREGATION - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+A department has employees, but employees are hired by the company and exist
+before and after any particular department does. Implement `Department` so that
+employees are created OUTSIDE it and passed in, and write `dissolve()`, which
+empties the department while leaving every employee alive and usable.
+Note: a department is more than a list - specifically, the parts outlive the
+whole. Your `dissolve()` is what proves the relationship is aggregation rather
+than composition.
+Evaluate the time and space complexity of `add_employee()` and
+`remove_employee()`. Define your variables and provide a rationale for why you
+believe your solution has the stated time and space complexity.
+
+```
+class Employee:
+    def __init__(self, name):
+        self.name = name
+
+class Department:
+    def __init__(self, name, employees=None):
+        pass
+
+    def add_employee(self, employee):
+        pass
+
+    def remove_employee(self, employee):
+        pass
+
+    def dissolve(self):
+        pass
+```
+
+Example Usage:
+
+```
+ana = Employee("Ana")
+eng = Department("Engineering", [ana])
+print(len(eng.employees))
+eng.dissolve()
+print(len(eng.employees))
+print(ana.name)
+```
+
+Example Output:
+
+```
+1
+0
+Ana
+```
+
+
+PROBLEM 2
+---------
+Write a `Library` that aggregates `Book` objects, plus a method
+`transfer_to(other, isbn)` that moves one book from this library to another.
+Raise a `KeyError` if the book is not present.
+Note: the book object itself must be the SAME object in the receiving library -
+do not copy it. Verify this in your solution with an identity check.
+After writing it, explain in one or two sentences why `transfer_to` is
+straightforward under aggregation and would be incoherent if `Library` composed
+its books instead.
+Evaluate the time and space complexity of `transfer_to()`. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+class Book:
+    def __init__(self, isbn, title):
+        self.isbn = isbn
+        self.title = title
+
+class Library:
+    def __init__(self, name, books=None):
+        pass
+
+    def transfer_to(self, other, isbn):
+        pass
+```
+
+Example Usage:
+
+```
+b = Book("111", "Dune")
+main = Library("Main", [b])
+branch = Library("Branch")
+main.transfer_to(branch, "111")
+print(len(main.books), len(branch.books))
+print(branch.books[0] is b)
+main.transfer_to(branch, "999")
+```
+
+Example Output:
+
+```
+0 1
+True
+KeyError: 'No book with ISBN 999'
+```
+
+
+PROBLEM 3
+---------
+The code below has an aliasing bug that only appears when two objects are built
+from the same source list. Reproduce the bug, explain in one sentence what is
+actually shared, then fix it while KEEPING the relationship as aggregation.
+Note: the fix is not "copy the songs." Copying the songs would turn this into
+composition. Identify precisely which thing must be copied and which must not.
+
+```
+class Song:
+    def __init__(self, title):
+        self.title = title
+
+class Playlist:
+    def __init__(self, name, songs):
+        self.name = name
+        self.songs = songs
+```
+
+Example Usage:
+
+```
+shared = [Song("A"), Song("B")]
+p1 = Playlist("Workout", shared)
+p2 = Playlist("Chill", shared)
+p1.songs.append(Song("C"))
+print(len(p1.songs), len(p2.songs))
+print(p1.songs[0] is p2.songs[0])
+```
+
+Example Output:
+
+```
+3 3
+True
+```
+
+Expected Output After Fix:
+
+```
+3 2
+True
+```
+
+
+PROBLEM 4
+---------
+A parking attendant is employed by the lot but is not created or destroyed by
+any one floor - attendants get reassigned between floors all shift. Implement
+`ParkingFloor.assign_attendant()` and `reassign()`, where reassigning removes
+the attendant from their previous floor first.
+Note: an attendant may be on at most one floor at a time, but the attendant
+object survives being removed from every floor.
+Classify the `ParkingLot -> Attendant` relationship and the
+`ParkingFloor -> Attendant` relationship separately. They are not the same, and
+explaining why is the point of the problem.
+
+```
+class Attendant:
+    def __init__(self, name):
+        self.name = name
+        self.floor = None
+
+class ParkingFloor:
+    def __init__(self, number):
+        self.number = number
+        self.attendants = []
+
+    def assign_attendant(self, attendant):
+        pass
+
+    def remove_attendant(self, attendant):
+        pass
+
+def reassign(attendant, new_floor):
+    pass
+```
+
+Example Usage:
+
+```
+a = Attendant("Luis")
+f1, f2 = ParkingFloor(1), ParkingFloor(2)
+f1.assign_attendant(a)
+print(a.floor.number, len(f1.attendants), len(f2.attendants))
+reassign(a, f2)
+print(a.floor.number, len(f1.attendants), len(f2.attendants))
+```
+
+Example Output:
+
+```
+1 1 0
+2 0 1
+```
+
+
+PROBLEM 5
+---------
+Write a function `merge_playlists()` that takes two playlists and returns a NEW
+playlist containing every distinct song from both, preserving the order of the
+first playlist followed by the songs unique to the second.
+Note: "distinct" means distinct song objects, not distinct titles. The merged
+playlist aggregates the originals' songs - the same objects appear in three
+playlists at once, which is legal here and would not be under composition.
+Evaluate the time and space complexity of your solution. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+class Song:
+    def __init__(self, title):
+        self.title = title
+
+class Playlist:
+    def __init__(self, name, songs=None):
+        self.name = name
+        self.songs = list(songs) if songs else []
+
+def merge_playlists(p1, p2, name):
+    pass
+```
+
+Example Usage:
+
+```
+a, b, c = Song("A"), Song("B"), Song("C")
+p1 = Playlist("Workout", [a, b])
+p2 = Playlist("Chill", [b, c])
+merged = merge_playlists(p1, p2, "All")
+print([s.title for s in merged.songs])
+print(merged.songs[1] is b)
+```
+
+Example Output:
+
+```
+['A', 'B', 'C']
+True
+```
+
+
+PROBLEM 6
+---------
+The comment in the code below labels this aggregation. It is not. Identify the
+single line that makes it composition, rewrite the class so the label becomes
+true, and write a short demonstration that proves the parts now outlive the
+whole.
+Note: the giveaway is WHERE the part objects come into existence. State the
+general rule you used in one sentence.
+
+```
+class Room:
+    def __init__(self, number):
+        self.number = number
+
+class House:
+    def __init__(self):
+        # aggregation: a house has rooms
+        self.rooms = [Room(1), Room(2), Room(3)]
+
+class HouseFixed:
+    def __init__(self, rooms):
+        pass
+```
+
+Example Usage:
+
+```
+rooms = [Room(1), Room(2)]
+h = HouseFixed(rooms)
+del h
+print([r.number for r in rooms])
+```
+
+Example Output:
+
+```
+[1, 2]
+```

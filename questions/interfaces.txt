@@ -1,0 +1,348 @@
+========================================
+INTERFACES - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+Define an interface `PaymentMethod` with a single abstract method `pay(amount)`
+that returns a confirmation string. Implement `CreditCard` and `Cash` from it.
+Then write a function `checkout()` that takes any `PaymentMethod` and an amount
+and returns the confirmation, without knowing which implementation it received.
+Note: `checkout()` must not contain any `isinstance` check or type branching. If
+it does, you have not used the interface.
+After writing it, add a third implementation without modifying `checkout()` or
+either existing class, and state which SOLID principle that demonstrates.
+
+```
+from abc import ABC, abstractmethod
+
+class PaymentMethod(ABC):
+    pass
+
+class CreditCard(PaymentMethod):
+    pass
+
+class Cash(PaymentMethod):
+    pass
+
+def checkout(method, amount):
+    pass
+```
+
+Example Usage:
+
+```
+print(checkout(CreditCard("4242"), 20.00))
+print(checkout(Cash(), 20.00))
+```
+
+Example Output:
+
+```
+Charged $20.00 to card ending 4242
+Received $20.00 in cash
+```
+
+
+PROBLEM 2
+---------
+Define an interface `Shape` with an abstract method `area()`. Implement
+`Circle`, `Rectangle`, and `Triangle`. Then write `total_area()`, which takes a
+list of shapes and returns the sum of their areas rounded to two decimals.
+Note: `total_area()` must work for a shape type that does not exist yet.
+Evaluate the time and space complexity of `total_area()`. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+    pass
+
+class Circle(Shape):
+    pass
+
+class Rectangle(Shape):
+    pass
+
+class Triangle(Shape):
+    pass
+
+def total_area(shapes):
+    pass
+```
+
+Example Usage:
+
+```
+shapes = [Circle(1), Rectangle(2, 3), Triangle(4, 5)]
+print(total_area(shapes))
+```
+
+Example Output:
+
+```
+19.14
+```
+
+
+PROBLEM 3
+---------
+The class below inherits from an ABC but does not implement the abstract method.
+Predict exactly what happens and on which line, then fix it. Next, write a
+function `can_instantiate()` that takes a class and returns `True` if it can be
+instantiated with no arguments and `False` if it is still abstract.
+Note: `@abstractmethod` does not fail at class-definition time. Know precisely
+when it does fail and what the error message says.
+
+```
+from abc import ABC, abstractmethod
+
+class Notifier(ABC):
+    @abstractmethod
+    def send(self, msg): ...
+
+class EmailNotifier(Notifier):
+    def send_email(self, msg):
+        print(msg)
+
+def can_instantiate(cls):
+    pass
+```
+
+Example Usage:
+
+```
+print(can_instantiate(EmailNotifier))
+n = EmailNotifier()
+```
+
+Example Output:
+
+```
+False
+TypeError: Can't instantiate abstract class EmailNotifier with abstract method send
+```
+
+
+PROBLEM 4
+---------
+Define an interface `ParkingSpot` with abstract methods `can_fit(vehicle_type)`,
+`park(vehicle)`, and `remove_vehicle()`. Implement `CompactSpot` (fits
+motorcycles and cars) and `LargeSpot` (fits anything). Then write
+`find_spot()`, which takes a list of spots and a vehicle type and returns the
+first spot that is both empty and able to fit it, or `None`.
+Note: `find_spot()` must not branch on the spot's class. The spot decides what
+fits, not the finder.
+Evaluate the time and space complexity of `find_spot()`. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+from abc import ABC, abstractmethod
+from enum import Enum
+
+class VehicleType(Enum):
+    MOTORCYCLE = "motorcycle"
+    CAR = "car"
+    TRUCK = "truck"
+
+class ParkingSpot(ABC):
+    pass
+
+class CompactSpot(ParkingSpot):
+    pass
+
+class LargeSpot(ParkingSpot):
+    pass
+
+def find_spot(spots, vehicle_type):
+    pass
+```
+
+Example Usage:
+
+```
+spots = [CompactSpot("C1"), CompactSpot("C2"), LargeSpot("L1")]
+print(find_spot(spots, VehicleType.CAR).spot_id)
+print(find_spot(spots, VehicleType.TRUCK).spot_id)
+```
+
+Example Output:
+
+```
+C1
+L1
+```
+
+
+PROBLEM 5
+---------
+The interface below forces every implementer to define methods that make no
+sense for some of them, which is why `RobotWorker` is full of empty stubs. Split
+it into smaller interfaces so that each class implements only what it actually
+does, then rewrite both classes.
+Note: name the principle this violates and describe the smell in one sentence -
+the smell is visible in the code below, so point at it specifically.
+After refactoring, write a function `run_shift()` that accepts anything that can
+work, whether or not it eats or sleeps.
+
+```
+from abc import ABC, abstractmethod
+
+class Worker(ABC):
+    @abstractmethod
+    def work(self): ...
+    @abstractmethod
+    def eat(self): ...
+    @abstractmethod
+    def sleep(self): ...
+
+class HumanWorker(Worker):
+    def work(self): return "building"
+    def eat(self): return "lunch"
+    def sleep(self): return "resting"
+
+class RobotWorker(Worker):
+    def work(self): return "building"
+    def eat(self): pass
+    def sleep(self): pass
+
+def run_shift(worker):
+    pass
+```
+
+Example Usage:
+
+```
+print(run_shift(HumanWorker()))
+print(run_shift(RobotWorker()))
+```
+
+Example Output:
+
+```
+building
+building
+```
+
+
+PROBLEM 6
+---------
+Rewrite Problem 1's `PaymentMethod` using duck typing instead of an ABC - no
+imports, no inheritance, no shared base class. Then write `checkout()` so that
+passing an object with no `pay()` method produces a clear error message rather
+than an `AttributeError`.
+Note: duck typing moves the failure from instantiation time to call time. Say
+what you lose by accepting that trade, and state which of the two versions you
+would ship for a payments system and why.
+
+```
+class CreditCard:
+    pass
+
+class Cash:
+    pass
+
+class Sandwich:
+    pass
+
+def checkout(method, amount):
+    pass
+```
+
+Example Usage:
+
+```
+print(checkout(Cash(), 20.00))
+print(checkout(Sandwich(), 20.00))
+```
+
+Example Output:
+
+```
+Received $20.00 in cash
+TypeError: Sandwich is not a valid payment method
+```
+
+
+PROBLEM 7
+---------
+Write an abstract class `Report` that has BOTH an abstract method
+`generate_body()` and a concrete method `render()` that the subclasses inherit
+unchanged. `render()` must wrap the body in a header and footer. Implement
+`SalesReport` and `InventoryReport`.
+Note: this is an abstract class, not a pure interface. State the difference in
+one sentence and say what would have to be removed to turn it back into an
+interface.
+
+```
+from abc import ABC, abstractmethod
+
+class Report(ABC):
+    pass
+
+class SalesReport(Report):
+    pass
+
+class InventoryReport(Report):
+    pass
+```
+
+Example Usage:
+
+```
+print(SalesReport(1500).render())
+```
+
+Example Output:
+
+```
+=== REPORT ===
+Total sales: 1500
+=== END ===
+```
+
+
+PROBLEM 8
+---------
+Define two independent interfaces, `Serializable` (abstract `to_dict()`) and
+`Comparable` (abstract `compare_to(other)`). Write a single class `Ticket` that
+implements both. Then write `sort_and_serialize()`, which takes a list of
+objects implementing both interfaces and returns a list of dictionaries sorted
+by `compare_to`.
+Note: `sort_and_serialize()` must never mention `Ticket`.
+Evaluate the time and space complexity of `sort_and_serialize()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from abc import ABC, abstractmethod
+
+class Serializable(ABC):
+    pass
+
+class Comparable(ABC):
+    pass
+
+class Ticket(Serializable, Comparable):
+    pass
+
+def sort_and_serialize(items):
+    pass
+```
+
+Example Usage:
+
+```
+tickets = [Ticket("T2", 9.00), Ticket("T1", 3.50)]
+print(sort_and_serialize(tickets))
+```
+
+Example Output:
+
+```
+[{'ticket_id': 'T1', 'fee': 3.5}, {'ticket_id': 'T2', 'fee': 9.0}]
+```

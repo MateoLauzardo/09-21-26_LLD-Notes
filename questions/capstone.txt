@@ -1,0 +1,164 @@
+========================================
+CAPSTONE - ALL SIX CONCEPTS
+Do this file LAST.
+========================================
+
+
+PROBLEM 1
+---------
+Design a vending machine that uses all six concepts at least once: two enums,
+one interface, one composition relationship, one aggregation relationship, one
+association, and one injected dependency.
+Write class skeletons only - attributes and method signatures, no full bodies -
+and label each relationship in a comment naming which of the four it is.
+Note: a design is more than a pile of classes - specifically, every relationship
+must be justified by the lifetime test, not by convenience. Write the
+justification next to each label.
+Evaluate the time and space complexity of `select_product()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity.
+
+```
+from abc import ABC, abstractmethod
+from enum import Enum
+
+class VendingMachine:
+    def __init__(self, slots, payment_processor):
+        pass
+
+    def select_product(self, code):
+        pass
+
+    def dispense(self, code, payment):
+        pass
+```
+
+Example Usage:
+
+```
+machine = VendingMachine(slots, CashProcessor())
+print(machine.select_product("A1"))
+print(machine.dispense("A1", 2.00))
+print(machine.dispense("A1", 0.25))
+```
+
+Example Output:
+
+```
+Chips - $1.50
+Dispensed Chips, change $0.50
+InsufficientFundsError: Chips costs $1.50, received $0.25
+```
+
+
+PROBLEM 2
+---------
+Design a library management system under the same six-concept constraint. Write
+the skeletons and label every relationship.
+Note: one relationship in this domain is commonly modeled wrong. A `Loan`
+connects a `Member` and a `Book` and carries a due date - name what that class
+is called in UML terms and explain why the due date cannot live on either side.
+After finishing, write down which of the six concepts was hardest to place here
+and why.
+
+```
+class Library:
+    def __init__(self, books, members, fine_policy):
+        pass
+
+    def check_out(self, member_id, isbn, date):
+        pass
+
+    def return_book(self, loan_id, date):
+        pass
+```
+
+Example Usage:
+
+```
+lib = Library(books, members, StandardFinePolicy(0.25))
+loan = lib.check_out("M1", "111", "2026-01-01")
+print(loan.due_date)
+print(lib.return_book(loan.loan_id, "2026-01-20"))
+```
+
+Example Output:
+
+```
+2026-01-15
+Returned Dune, fine $1.25
+```
+
+
+PROBLEM 3
+---------
+Build the full parking lot. Implement - do not skeleton - a system supporting:
+multiple floors, spots of three types, tickets, and a pricing strategy passed in
+from outside.
+Note: the grading criterion is not whether it runs. It is whether adding a
+fourth vehicle type or a second pricing rule requires editing any existing class
+or only adding new ones. Before you write anything, write those two change
+requests down and design so that both are pure additions.
+Evaluate the time and space complexity of `park_vehicle()` and
+`unpark_vehicle()`. Define your variables and provide a rationale for why you
+believe your solution has the stated time and space complexity.
+
+```
+class ParkingLot:
+    def __init__(self, floors, pricing_strategy):
+        pass
+
+    def park_vehicle(self, vehicle):
+        pass
+
+    def unpark_vehicle(self, ticket_id, hours):
+        pass
+
+    def availability(self):
+        pass
+```
+
+Example Usage:
+
+```
+lot = ParkingLot(floors, HourlyPricing(2.50))
+ticket = lot.park_vehicle(Vehicle("ABC123", VehicleType.CAR))
+print(ticket.ticket_id, ticket.spot.spot_id)
+print(lot.availability())
+print(lot.unpark_vehicle(ticket.ticket_id, 3))
+print(lot.availability())
+```
+
+Example Output:
+
+```
+T1 1-CAR-1
+{'MOTORCYCLE': 2, 'CAR': 3, 'TRUCK': 1}
+7.5
+{'MOTORCYCLE': 2, 'CAR': 4, 'TRUCK': 1}
+```
+
+
+PROBLEM 4
+---------
+Take your finished Problem 3 and answer these out loud, timing yourself, then
+write down what you said.
+
+```
+# a) Walk me through the class relationships in under 90 seconds.
+#
+# b) You made ParkingFloor -> ParkingSpot a composition. What if I want to
+#    physically move a spot to another floor? Respond without immediately
+#    caving, then decide whether you would change the design.
+#
+# c) Why not just use inheritance for all of this?
+#
+# d) Name one decision you would defend as correct and one you would flag as
+#    debatable.
+```
+
+Example Output:
+
+```
+# There is no correct output. (d) is scored highest in a real interview.
+```
