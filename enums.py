@@ -271,3 +271,133 @@ print([t.ticket_id for t in active_tickets(tickets)])
 
 # print(TicketStatus.PAID.value == "paid") 
 # returns: True 
+
+
+# ------------------------------------------------------
+
+
+# NOTE: problem 5
+# A ticket may only move through its lifecycle in one direction. Write a function
+# `advance()` that takes a `TicketStatus` and returns the next status in the
+# sequence ISSUED -> ACTIVE -> PAID. If the status is already terminal, raise a
+# `ValueError`.
+# Note: express the allowed transitions as data, not as a chain of if/elif. Adding
+# a new state should not require rewriting the function body.
+# Evaluate the time and space complexity of your solution. Define your variables
+# and provide a rationale for why you believe your solution has the stated time
+# and space complexity.
+
+
+from enum import Enum
+
+class TicketStatus(Enum):
+    # name    value
+    ISSUED = "issued"
+    ACTIVE = "active"
+    PAID = "paid"
+
+
+def advance(status):
+    
+    # status = TicketStatus.ISSUED
+    
+    # if issued
+    if status.value == "issued":
+        status = TicketStatus.ACTIVE
+    
+    elif status.value == "active":
+        status = TicketStatus.PAID
+    
+    else:
+        return "TicketStatus.PAID is a terminal state"
+
+    
+    return status
+
+
+# Example Usage:
+print("Problem 5:", advance(TicketStatus.ISSUED)) # -> Problem 5: TicketStatus.ACTIVE
+print("Problem 5:",advance(TicketStatus.ACTIVE))
+print("Problem 5:",advance(TicketStatus.PAID))
+
+# Example Output:
+# TicketStatus.ACTIVE
+# TicketStatus.PAID
+# ValueError: TicketStatus.PAID is a terminal state
+
+
+# ------------------------------------------------------
+
+
+# PROBLEM 6
+# The code below runs without raising, which is exactly the problem. Identify
+# every defect, then rewrite `get_rate()` so that an unrecognized spot type fails
+# loudly instead of silently returning `None`.
+# Note: there are three separate issues - one typo, one missing branch, and one
+# design flaw that the first two are symptoms of.
+# State what the design flaw is and explain how converting to an enum eliminates
+# all three defects at once.
+
+
+#  Identify errors:
+# every defect, then rewrite `get_rate()
+# one typo, one missing branch (done), and one design flaw that the first two are symptoms of.
+
+from enum import Enum
+
+
+class SpotType(Enum):
+    # name     value  
+    COMPACT = "compact"
+    HANDICAPPED = "handicapped"
+    MOTORCYCLE = "motorcycle"
+    LARGE = "large"
+
+
+# broken function
+def get_rate(spot_type):
+    
+    if spot_type == "compact":
+        return 2.00
+    elif spot_type == "large":
+        return 4.00
+    elif spot_type == "handicaped":
+        return 0.00
+    
+    
+# fixed function (one we r working in) 
+def get_rate_fixed(spot_type):
+        
+    if spot_type.value == "compact":
+        return 2.00
+    elif spot_type.value == "handicapped":
+        return 0.00
+    elif spot_type.value == "motorcycleeee":
+        return 1.00
+    elif spot_type.value == "large":
+        return 4.00      
+    else:
+        raise ValueError # inside the function throws the error.
+        
+
+
+try:
+    
+# Example Usage:
+    print("Problem 6:",get_rate_fixed(SpotType.COMPACT))
+    print("Problem 6:",get_rate_fixed(SpotType.HANDICAPPED))
+    print("Problem 6:",get_rate_fixed(SpotType.MOTORCYCLE))
+
+# outside catches it.
+except ValueError:
+    print("Problem 6: This object does not support the requested attribute or method.")
+
+
+# Example Output:
+# 2.0
+# None
+# None
+
+
+# debug 
+# print(rates.COMPACT.value) # rates.COMPACT
