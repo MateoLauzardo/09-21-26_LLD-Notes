@@ -56,47 +56,83 @@ class ParkingFloor:
             for x in range(1, number_of_spots + 1):
             
                 park_spout = ParkingSpot(f"{number}-{vech_type.name}-{x}", vech_type)
-            
+
+                
+                #NOTE: Spots array is going to hold these values 
+                # 1-CAR-1 VehicleType.CAR False
+                # 1-CAR-2 VehicleType.CAR False
+                # 1-TRUCK-1 VehicleType.TRUCK False
                 self._spots.append(park_spout)
-    
+
             
         
         
-        
-        
-        
-    # in order to write this function I need to identif waht makes a spot avaliable. 
-    def find_available_spot(self, vehicle_type:list):
-        pass
 
+    # VehicleType.CAR -> its checking if CAR has an avaliable spots which returns the first empty spot that fits or `None`
+    def find_available_spot(self, vehicle_type:Enum):
+        
+        # loop through _spots to see if we have CAR avaliable 
+        # spot is just an object of parking spot
+        for spot in self._spots:
+            
+            if spot.vehicle_type == vehicle_type:
+                
+                # if these is a spot 
+                if spot.occupied == False:
+                    # return ParkingSpot object -> "spot" 
+                    return spot
 
+        # this is ur else 
+        return None     
+        
+            
+        
+    # returning a string of how much there are vs occupied -> "1/3"
     def occupancy(self):
-        pass
+        
+        total_length = len(self._spots)
+
+        occupied = 0 
+        
+        # keeping count of how many spots are taken
+        for spot in self._spots:
+            
+            if spot.occupied == True:
+                occupied += 1
+        
+        
+        answer = f"{occupied}/{total_length}"
+        
+        return answer 
+        
+        
+        
 
 
+# -----------------
 
-# Example Usage:
-
-# # passees in values to class Parking Floor
-# floor = ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
-
-# # calls the object you create and finds avaliabke spots for the CAR constent
-# spot = floor.find_available_spot(VehicleType.CAR)
-
-# print(spot.spot_id)
+#NOTE: Example Usage:
+# passees in values to class Parking Floor
+floor = ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
+# calls the object you create and finds avaliabke spots for the CAR constent
+spot = floor.find_available_spot(VehicleType.CAR)
+print(spot.spot_id)
 
 
-# # spot is changing value 
-# spot.occupied = True
+# spot is changing value 
+spot.occupied = True
+print(floor.find_available_spot(VehicleType.CAR).spot_id)
 
-# print(floor.find_available_spot(VehicleType.CAR).spot_id)
-# print(floor.occupancy())
+
+print(floor.occupancy())
 
 
 # Example Output:
 # 1-CAR-1
 # 1-CAR-2
 # 1/3
+
+# -----------------
 
 
 # debugging 
@@ -106,10 +142,10 @@ class ParkingFloor:
 # print(string)
 
 
-floor = ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
+# floor = ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
 
-for spot in floor._spots:
-    print(spot.spot_id, spot.vehicle_type, spot.occupied)
+# for spot in floor._spots:
+#     print(spot.spot_id, spot.vehicle_type, spot.occupied)
 
 
 # ------------------------------------------------------------------------------------
