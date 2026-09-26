@@ -212,7 +212,7 @@
 #         return self.method_calls
 
 
-# #NOTE: Example Usage:
+# # #NOTE: Example Usage:
 # o = Order("O1") # creating instance of class 
 # o.add_line("widget", 2, 9.99) # you call the add_line method
 # o.add_line("gadget", 1, 24.50) # you call the add_line method
@@ -240,5 +240,69 @@
 
 
 
+# PROBLEM 3
+# ---------
+# The class below claims composition but leaks its part. Show the leak by
+# reproducing the example below, 
 
+# then rewrite `Car` so that discarding the car genuinely invalidates the engine.
+
+# Note: Python will not cascade-delete for you. You must enforce composition
+# semantics yourself. Implement `dispose()` so that any method call on a disposed
+# engine raises a `RuntimeError`, and explain why exposing the part at all was the
+# original mistake.
+
+
+class Engine:
+    def __init__(self, hp: int):
+        self.hp = hp
+        self.run = True 
+
+    def start(self):
+        
+        if self.run == True: 
+            return f"vroom ({self.hp}hp)"
+        else:
+            raise("RuntimeError: Engine has been disposed")
+
+class Car:
+    def __init__(self, hp: int): 
+        # varaible "engine" equals passing the value into another class 
+        self.engine = Engine(hp)
+
+    def get_engine(self):
+        # e is equal to what is being returned -> this is returning the literaly object 
+        # instance for the other Engine class, so if you want to call any methods u need this 
+        return self.engine 
+
+    
+    
+    #NOTE: we want to remove instance of class with this function 
+    def dispose(self):
+        
+        self.engine.run = False 
+        
+        
+            
+        
+
+
+# Example Usage:
+c = Car(300) # passing in value 
+e = c.get_engine() # e is now the instance of Engine (a whole other class )
+print(e.start()) # vroom (300hp) -> (done)
+
+#NOTE: we want to remove instance of class with this function 
+c.dispose()
+print(e.start())
+
+# Example Output:
+# vroom (300hp)
+# RuntimeError: Engine has been disposed
+
+
+# debug:
+c = Car(300) # passing in value 
+# e = c.get_engine() # literally retruning so e equals the reutrn value 
+# print(e.start())
 
