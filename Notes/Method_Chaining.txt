@@ -1,0 +1,14 @@
+Method Chainging -> a programming technique where multiple methods are called sequentially on a single 
+object in a single line of code. 
+
+*NOTE - example:
+__________________________________________________________________________
+
+text = "  hello pythonistas  "
+
+# Chaining strip(), title(), and replace()
+result = text.strip().title().replace("Pythonistas", "World")
+
+print(result)  # Output: Hello World
+
+__________________________________________________________________________

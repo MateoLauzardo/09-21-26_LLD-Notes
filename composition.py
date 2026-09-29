@@ -1,15 +1,4 @@
-# Composition means one class is built out of other objects, and those 
-# objects are usually created right inside __init__ and stored as attributes.
-
-# Composition -> is a design princible where comp[elx systems or objects
-# are built by combining similar, simpler, reusable peices of code. 
-
-# Examples: Car (object) and a car has a engine, wheels, and so on
-
-# ------------------------------------------------------------------------------------
-
 # #NOTE: PROBLEM 1
-
 
 # # You create a floor by giving it a floor number and how many spots of each type.
 # # The floor builds its own spots. You ask it for a free spot of a certain type,
@@ -17,90 +6,87 @@
 # from enum import Enum
 
 
-# class VehicleType(Enum):
-#     MOTORCYCLE = "motorcycle"
-#     CAR = "car"
-#     TRUCK = "truck"
+class VehicleType(Enum):
+    MOTORCYCLE = "motorcycle"
+    CAR = "car"
+    TRUCK = "truck"
 
 
-# # this class is meant to create parking spot 
-# class ParkingSpot:
-#     def __init__(self, spot_id: str, vehicle_type: Enum):
-#         self.spot_id = spot_id
-#         self.vehicle_type = vehicle_type
-#         self.occupied = False
+# this class is meant to create parking spot 
+class ParkingSpot:
+    def __init__(self, spot_id: str, vehicle_type: Enum):
+        self.spot_id = spot_id
+        self.vehicle_type = vehicle_type
+        self.occupied = False
 
 
-# # this class is meant for creating parking floor 
-# class ParkingFloor:
+# this class is meant for creating parking floor 
+class ParkingFloor:
 
-#     # EX: ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
-#     def __init__(self, number: int, spot_counts: dict):
-#         self.number = number 
-#         self.spot_counts = spot_counts
+    # EX: ParkingFloor(1, {VehicleType.CAR: 2, VehicleType.TRUCK: 1})
+    def __init__(self, number: int, spot_counts: dict):
+        self.number = number 
+        self.spot_counts = spot_counts
 
-#         #ANCHOR Anything attached to self can be seen by every method of the class.
-#         self._spots = []
+        #ANCHOR Anything attached to self can be seen by every method of the class.
+        self._spots = []
         
-#         #NOTE step1: loop through spot count, so we get car type and spots / Dict: # {VehicleType.CAR: 2, VehicleType.TRUCK: 1}
-#         for vech_type, number_of_spots in spot_counts.items():
+        #NOTE step1: loop through spot count, so we get car type and spots / Dict: # {VehicleType.CAR: 2, VehicleType.TRUCK: 1}
+        for vech_type, number_of_spots in spot_counts.items():
             
-#             for x in range(1, number_of_spots + 1):
+            for x in range(1, number_of_spots + 1):
             
-#                 park_spout = ParkingSpot(f"{number}-{vech_type.name}-{x}", vech_type)
+                park_spout = ParkingSpot(f"{number}-{vech_type.name}-{x}", vech_type)
 
                 
-#                 #NOTE: Spots array is going to hold these values 
-#                 # 1-CAR-1 VehicleType.CAR False
-#                 # 1-CAR-2 VehicleType.CAR False
-#                 # 1-TRUCK-1 VehicleType.TRUCK False
-#                 self._spots.append(park_spout)
+                #NOTE: Spots array is going to hold these values 
+                # 1-CAR-1 VehicleType.CAR False
+                # 1-CAR-2 VehicleType.CAR False
+                # 1-TRUCK-1 VehicleType.TRUCK False
+                self._spots.append(park_spout)
 
             
         
         
 
-#     # VehicleType.CAR -> its checking if CAR has an avaliable spots which returns the first empty spot that fits or `None`
-#     def find_available_spot(self, vehicle_type:Enum):
+    # VehicleType.CAR -> its checking if CAR has an avaliable spots which returns the first empty spot that fits or `None`
+    def find_available_spot(self, vehicle_type:Enum):
         
-#         # loop through _spots to see if we have CAR avaliable 
-#         # spot is just an object of parking spot
-#         for spot in self._spots:
+        # loop through _spots to see if we have CAR avaliable 
+        # spot is just an object of parking spot
+        for spot in self._spots:
             
-#             if spot.vehicle_type == vehicle_type:
+            if spot.vehicle_type == vehicle_type:
                 
-#                 # if these is a spot 
-#                 if spot.occupied == False:
-#                     # return ParkingSpot object -> "spot" 
-#                     return spot
+                # if these is a spot 
+                if spot.occupied == False:
+                    # return ParkingSpot object -> "spot" 
+                    return spot
 
-#         # this is ur else 
-#         return None     
+        # this is ur else 
+        return None     
         
             
         
-#     # returning a string of how much there are vs occupied -> "1/3"
-#     def occupancy(self):
+    # returning a string of how much there are vs occupied -> "1/3"
+    def occupancy(self):
         
-#         total_length = len(self._spots)
+        total_length = len(self._spots)
 
-#         occupied = 0 
+        occupied = 0 
         
-#         # keeping count of how many spots are taken
-#         for spot in self._spots:
+        # keeping count of how many spots are taken
+        for spot in self._spots:
             
-#             if spot.occupied == True:
-#                 occupied += 1
+            if spot.occupied == True:
+                occupied += 1
         
         
-#         answer = f"{occupied}/{total_length}"
+        answer = f"{occupied}/{total_length}"
         
-#         return answer 
+        return answer 
         
         
-        
-
-
 # # -----------------
 
 # #NOTE: Example Usage:
@@ -238,8 +224,6 @@ class Order:
 # ------------------------------------------------------------------------------------
 
 
-
-
 # PROBLEM 3
 # ---------
 # The class below claims composition but leaks its part. Show the leak by
@@ -284,8 +268,6 @@ class Car:
         
         
             
-        
-
 
 # # Example Usage:
 # c = Car(300) # passing in value 
@@ -309,9 +291,6 @@ class Car:
 
 
 # ------------------------------------------------------------------------------------
-
-
-
 
 # PROBLEM 4
 # ---------
@@ -391,8 +370,6 @@ class Bird:
 
 
 # ------------------------------------------------------------------------------------
-
-
 
 # PROBLEM 5
 # ---------
@@ -520,14 +497,9 @@ class Character:
 # RuntimeError: Weapon sword has been destroyed
 
 
-
 # ------------------------------------------------------------------------------------
 
-
-
 # PROBLEM 6
-# ---------
-
 
 #NOTE: Association -> classes interact temporarily or hold references to each other, but they have completely independent lifecycles. 
 
@@ -573,7 +545,6 @@ class Department:
 
 # ----------------------------------------------------------------------------
 
-
 # Classify each relationship below as composition, aggregation, or association,
 # and write a one-line justification for each using the lifetime test. Then
 # implement the two you marked composition, proving in your example usage that the
@@ -581,7 +552,6 @@ class Department:
 
 #NOTE: two of these five are genuinely debatable. Identify which two and say what
 # additional requirement would settle each one.
-
 
 # a) ParkingLot  -> ParkingFloor         (Compostion) - ("Part-Of")
 # b) ParkingFloor -> ParkingSpot         (Composition) - ("Part-Of")
@@ -591,8 +561,6 @@ class Department:
 # d) Ticket      -> ParkingSpot          (Association) -> the lack of any whole-part relationship: the vehicle isn't a part of the spot, just temporarily connected to it.
  
 # e) ParkingLot  -> Attendant            (Aggregation) - ("has-a")
-
-
 
 # Example Usage:
 # Write your own demonstration for the two composition relationships.
@@ -605,9 +573,27 @@ class ParkingSpot:
     def __init__(self, ID:int):
         self.ID = ID
         self.taken = False 
+        
+        
+        
+    def park(self):
+        if self.taken == False:
+            self.taken = True
+            
+        else:
+            print("spot is already taken")
+    
+
+    def leave(self):
+        
+        if self.taken == True:
+            self.taken = False
+        
+        else:
+            print("youre not parked")
 
 
-    #TODO mark spot is taken and when its open again 
+
 
 
 # its number + needs the spots itself (object), 
@@ -626,16 +612,31 @@ class ParkingFloor:
             
                         
     
-    #TODO check how many parking spots are left x/x
+    #checks how many parking spots are left x/x
+    def how_many_spots_left(self):
+
         
+        number_of_taken_spots = 0 
+        
+        # count how many are taken
+        for spot in self.list_of_spots:
+            if spot.taken == True:
+                number_of_taken_spots += 1
+                
+            
+        spots_left = self.capacity - number_of_taken_spots
+        
+        
+        return spots_left
+            
+            
     
     
 # needs to contain the floor itself (object)
 class ParkingLot:
     def __init__(self, floor: list):
         
-        
-        # hold a list of parkingFloor objects with floor number and capacity        
+        #ANCHOR - we do this so we have objects of each instance so we can LOOP through it below and use for methods like total open      
         self.floors = [] 
         
        # [60,60,60,50,50]
@@ -643,14 +644,36 @@ class ParkingLot:
             self.floors.append(ParkingFloor(parkingFloorNumber, capacity))
             
         
-        #TODO total open spots & Per-floor summary: show each floor's number with its open/total count, like a sign at a garage entrance.
-
-
-
-
-
+    def total_open_spots(self):
+    
+        # need to call total open slots function, make a variable to add each answer together and return it 
+        total_variable = 0 
+        
+        for floor in self.floors:
+            total_variable += floor.how_many_spots_left()
+            
+        return total_variable
+        
+    
+            
 # a list of the capacity of each floor, floors represented by indexs 
-parkingLot = ParkingLot([60,60,60,50,50])
+lot = ParkingLot([60, 60, 60, 50, 50])
+
+print("Open at start:", lot.total_open_spots())            # expect 280
+
+# park 2 cars on floor 1, 1 car on floor 4
+lot.floors[0].list_of_spots[0].park() # goes to index 0, which is an object of parking floor which has access to list of spots so index 0 
+lot.floors[0].list_of_spots[1].park()
+lot.floors[3].list_of_spots[0].park()
+
+print("Floor 1 open:", lot.floors[0].how_many_spots_left())  # expect 58
+print("Floor 4 open:", lot.floors[3].how_many_spots_left())  # expect 49
+print("Total open:", lot.total_open_spots())                 # expect 277
+
+# edge cases
+lot.floors[0].list_of_spots[0].park()    # expect "already taken" message
+lot.floors[0].list_of_spots[5].leave()   # expect "not parked" message
+
 
 
  

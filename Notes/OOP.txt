@@ -1,0 +1,113 @@
+
+
+Object Oriented Programming (OOP) - a programming model that organizes software design around data, or objects. rather 
+than functions and logic. This is when you have Characteristics or attributes (like a car's color, model, or weight).
+
+
+**NOTE - Core Principles of OOP / there are four of them / (IEAP) "I EAT APPLE PIE"
+• Encapsulation: Hiding an object's internal data so it can only be changed through specific, controlled methods.
+• Inheritance: Allowing a new class of objects to take on the properties and methods of an existing class to reuse code.
+• Polymorphism: Allowing different types of objects to use the same function name while performing the action in their own specific way.
+• Abstraction: Hiding complex background details and only showing the essential features to the user.
+
+** Explained in really easy example
+• Encapsulation: Your toy is in a locked box. You can only play with it using the buttons on the outside.
+• Inheritance: A puppy gets traits from its mommy dog. A new class gets stuff from an old class, so you don't have to build it again.
+• Polymorphism: You tell a dog and a cat to "speak." The dog says "woof," and the cat says "meow." Same command, different actions.
+• Abstraction: You press the TV remote and the channel changes. You don't need to know how it works inside. You just see the buttons you need.
+
+
+**Example:
+__________________________________________________________________________
+
+* Encapsulation (OUSTIDE CLASS CAN NOT SEE IT)
+* Use it when you want to protect data from being changed wrongly 
+like making sure no one sets a bank balance to a random number  -> 
+
+
+class BankAccount:
+    def __init__(self, balance):
+        self.__balance = balance
+
+    def get_balance(self):
+        return self.__balance      # ✅ works, inside the class
+
+
+*NOTE ouput:
+account = BankAccount(1000)
+print(account.get_balance())       # ✅ works, goes through the method
+print(account.__balance)           # ❌ error, outside the class
+
+__________________________________________________________________________
+
+
+* Polymorphism (DIFFERENT CLASS SAME METHOD)
+* Use it when different objects should do the same kind of action 
+in their own way, so you can treat them all the same in your code ->
+
+class Dog:
+    def speak(self):
+        return "Woof!"
+
+class Cat:
+    def speak(self):
+        return "Meow!"
+
+class Cow:
+    def speak(self):
+        return "Moo!"
+
+animals = [Dog(), Cat(), Cow()]
+
+for animal in animals:
+    print(animal.speak())
+
+
+*NOTE output:
+Woof!
+Meow!
+Moo!
+
+__________________________________________________________________________
+
+
+* ABSTRACTION (Abstraction hides complicated steps so the object is easy to use.) ->
+* Use it when something has lots of complicated steps 
+and you want people to use it with one simple method ->
+
+
+class CoffeeMachine:
+    def make_coffee(self):
+        self._heat_water()
+        self._grind_beans()
+        self._brew()
+        print("Here's your coffee! ☕")
+
+    def _heat_water(self):
+        print("Heating water...")
+
+    def _grind_beans(self):
+        print("Grinding beans...")
+
+    def _brew(self):
+        print("Brewing...")
+
+
+
+machine = CoffeeMachine()
+machine.make_coffee()
+
+
+
+*NOTE output: 
+Heating water...
+Grinding beans...
+Brewing...
+Here's your coffee! ☕
+
+*NOTE 
+Why this is abstraction: you only press one button, make_coffee(). You don't need to know about heating, grinding, 
+or brewing. All the complicated steps are hidden behind one simple method.
+
+
+__________________________________________________________________________

@@ -1,0 +1,9 @@
+Composition -> means one class is built out of other, and those objects are usually created right inside __init__ and stored 
+as attributes.
+
+*NOTE - remember the phrase -> ("Part-Of")
+
+* It's a design princible where compelx systems or objects are built by combining similar, simpler, reusable peices of code. 
+* Examples: Car (object) and engine is ("Part-Of") a car. This goes for wheels, and so on.
+
+

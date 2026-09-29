@@ -1,0 +1,37 @@
+inheritance -> Is a core concept in OOP that allows a new class to acqure the properties (attributes) and behaviors (methods)
+of an existing class 
+
+*NOTE - remember the phrase -> ("Is-a")
+
+* The primary goal is code reusability. Allowing developers to write common functionality once and share it accross multiple 
+realted classes 
+* There is a "Parent" class which is giving the properties and behaviors and there is the children class that call the 
+parent class as an argument.
+
+
+
+**Example:
+__________________________________________________________________________
+
+class Animal():
+    def __init__(self, name:str):
+        self.name = name 
+
+    def eat(self):
+        print(f"{self.name} is eating)
+
+
+*NOTE - Subclass (Child) inheriting from Animal 
+class Dog(Animal):
+    def eat(self):
+        print(f"{self.name} is chewing on a bone")
+
+    def bark(self):
+        print(f"{self.name} says Woof!")
+
+# Usage
+my_dog = Dog("Buddy")
+my_dog.eat()   # Outputs: Buddy is chewing on a bone. (Overridden behavior)
+my_dog.bark()  # Outputs: Buddy says Woof! (Subclass-specific behavior)
+
+_________________________________________________________________________
