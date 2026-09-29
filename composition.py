@@ -253,48 +253,48 @@
 # original mistake.
 
 
-class Engine:
-    def __init__(self, hp: int):
-        self.hp = hp
-        self.run = True 
+# class Engine:
+#     def __init__(self, hp: int):
+#         self.hp = hp
+#         self.run = True 
 
-    def start(self):
+#     def start(self):
         
-        if self.run == True: 
-            return f"vroom ({self.hp}hp)"
-        else:
-            raise("RuntimeError: Engine has been disposed")
+#         if self.run == True: 
+#             return f"vroom ({self.hp}hp)"
+#         else:
+#             raise("RuntimeError: Engine has been disposed")
 
-class Car:
-    def __init__(self, hp: int): 
-        # varaible "engine" equals passing the value into another class 
-        self.engine = Engine(hp)
+# class Car:
+#     def __init__(self, hp: int): 
+#         # varaible "engine" equals passing the value into another class 
+#         self.engine = Engine(hp)
 
-    def get_engine(self):
-        # e is equal to what is being returned -> this is returning the literaly object 
-        # instance for the other Engine class, so if you want to call any methods u need this 
-        return self.engine 
+#     def get_engine(self):
+#         # e is equal to what is being returned -> this is returning the literaly object 
+#         # instance for the other Engine class, so if you want to call any methods u need this 
+#         return self.engine 
 
     
     
-    #NOTE: we want to remove instance of class with this function 
-    def dispose(self):
+#     #NOTE: we want to remove instance of class with this function 
+#     def dispose(self):
         
-        self.engine.run = False 
+#         self.engine.run = False 
         
         
             
         
 
 
-# Example Usage:
-c = Car(300) # passing in value 
-e = c.get_engine() # e is now the instance of Engine (a whole other class )
-print(e.start()) # vroom (300hp) -> (done)
+# # Example Usage:
+# c = Car(300) # passing in value 
+# e = c.get_engine() # e is now the instance of Engine (a whole other class )
+# print(e.start()) # vroom (300hp) -> (done)
 
-#NOTE: we want to remove instance of class with this function 
-c.dispose()
-print(e.start())
+# #NOTE: we want to remove instance of class with this function 
+# c.dispose()
+# print(e.start())
 
 # Example Output:
 # vroom (300hp)
@@ -302,7 +302,228 @@ print(e.start())
 
 
 # debug:
-c = Car(300) # passing in value 
+# c = Car(300) # passing in value 
 # e = c.get_engine() # literally retruning so e equals the reutrn value 
 # print(e.start())
+
+
+
+# ------------------------------------------------------------------------------------
+
+
+
+
+# PROBLEM 4
+# ---------
+
+#NOTE: Inheritance ("Is-A"): A child class derives from a parent class, automatically gaining its 
+# methods and properties. Example: A Dog is an Animal.Composition ("Has-A"): An object is built by containing or referencing other
+# independent objects. Example: A Car has an Engine and has 
+
+
+# The hierarchy below doubles in size every time a new ability is added. 
+
+# Rewrite it using composition so that a bird HOLDS its behaviors instead of inheriting
+# them, and show a bird acquiring the ability to fly at runtime - something the
+# inheritance version cannot do.
+
+# Note: name the specific problem the inheritance version has, and count how many
+# classes you would need for five independent abilities under each approach.
+
+
+# class Bird: ...
+# class FlyingBird(Bird): ...
+# class SwimmingBird(Bird): ...
+# class FlyingSwimmingBird(FlyingBird, SwimmingBird): ...
+
+
+class CanSwim:
+    pass
+        
+    
+
+class CanFly:
+    pass 
+            
+
+# we are doing compostion "has-a" so birds has a ability to swim, and fly 
+class Bird:
+    
+    def __init__(self, name:str, fly_behavior=None, swim_behavior=None):
+        self.name = name 
+        self.fly_behavior = fly_behavior
+        self.swim_behavior = swim_behavior
+    
+       
+    # return a string 
+    def describe(self):
+        
+        # output: # Duck: flies, swims
+        
+        array = [] 
+                        
+        if self.fly_behavior:
+            array.append("flies")
+        
+        if self.swim_behavior:
+            array.append("swims")
+        
+        join = (", ".join(array))
+        
+        describe = f"{self.name}: {join}"
+        
+        return describe
+
+
+# # Example Usage:
+# penguin = Bird("Penguin", swim_behavior=CanSwim())
+# print(penguin.describe())
+# duck = Bird("Duck", fly_behavior=CanFly(), swim_behavior=CanSwim())
+# print(duck.describe())
+# penguin.fly_behavior = CanFly()
+# print(penguin.describe())
+
+
+# Example Output:
+# Penguin: swims
+# Duck: flies, swims
+# Penguin: flies, swims
+
+
+# ------------------------------------------------------------------------------------
+
+
+
+# PROBLEM 5
+# ---------
+# Implement a `Character` composed of an optional `Weapon`, `Armor`, and a list of
+# `Ability` objects, all created and owned by the character's factory method
+# `create()`. Write `attack()`, which returns total damage, and `equip()`, which
+# swaps a weapon and destroys the old one.
+# Note: the old weapon must be unusable after the swap. State whether the
+# character's abilities are composition or aggregation under YOUR design, and
+# defend the choice - both answers are defensible, but only with a reason.
+# Evaluate the time and space complexity of `attack()`. Define your variables and
+# provide a rationale for why you believe your solution has the stated time and
+# space complexity.
+
+
+class Weapon:
+    def __init__(self, name:str, damage:int):
+        self.name = name 
+        self._damage = damage
+        self.destroyed = False
+        
+        
+        
+    @property
+    def damage(self):
+        if self.destroyed:
+            raise RuntimeError(f"Weapon {self.name} has been destroyed")
+        return self._damage
+   
+                     
+        
+        
+class Ability:
+    def __init__(self, name:str, bonus:int):
+        self.name = name 
+        self.bonus = bonus
+
+
+
+class Character:
+    def __init__(self, name, weapon, ability):
+        self.name = name 
+        self.weapon = weapon
+        self.ability = ability
+        
+        
+    # hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
+    @classmethod
+    def create(cls, name:str, weapon_spec:tuple, ability_specs:list):
+        
+        
+        ability_list = [] #NOTE -> going to pass into cls (just 2 objects being created) / [1. finished_ability, 2. finished_ability]
+        
+        
+        #1.) break down ability -> ("rage", 5), ("focus", 2)]
+        for ability in ability_specs:
+            # unpack in two varaiables 
+            ability_tool, ability_damage = ability
+            
+            # create object for ability 
+            finished_ability = Ability(ability_tool,ability_damage)
+            
+            # add to list -> []
+            ability_list.append(finished_ability)
+            
+            
+        
+        #2.) break down weapon -> ("sword", 10)
+        weapon_tool, weapon_damage = weapon_spec
+        weapon = Weapon(weapon_tool, weapon_damage) #NOTE -> goiong to pass into cls (just 1 object created for weapon)
+
+        
+    
+        #3.) #ANCHOR -> CLS savees these values to the INIT vales 
+        return cls(name, weapon, ability_list)
+
+
+    # eqip weapon, and attatch damage / hero.equip(("axe", 15))
+    def equip(self, sepcs:tuple):
+        
+        # setting value to True 
+        self.weapon.destroyed = True
+        
+        # replace whats equiped 
+        weapon, damage = sepcs
+            
+        # you set this variable from INIT equal to object 
+        self.weapon = Weapon(weapon, damage)
+        
+        
+        
+    #grabs what weapon point, rage points, and focus points 
+    def attack(self):
+        
+        total_damage = 0 
+        
+        total_damage += self.weapon.damage #NOTE -> your able to do .damage cuz self.weapon varialbe is set equaul to object 
+        
+        for ability in self.ability:
+            total_damage += ability.bonus 
+            
+            
+        return total_damage
+            
+        
+        
+        
+        
+
+
+# Example Usage:
+hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
+print(hero.attack())
+old = hero.weapon
+hero.equip(("axe", 15))
+print(hero.attack())
+
+try:
+    print(old.damage)
+except RuntimeError as e:
+    print(f"RuntimeError: {e}")
+
+
+# Example Output:
+# 17
+# 22
+# RuntimeError: Weapon sword has been destroyed
+
+
+
+# ------------------------------------------------------------------------------------
+
+
 
