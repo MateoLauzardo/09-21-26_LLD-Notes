@@ -154,62 +154,62 @@
 # Note: make the constraint real in code, not just a comment. Then write one
 
 
-# class Order:
-#     def __init__(self, order_id: str):
-#         self.order_id = order_id
-#         self.method_calls = 0
-#         self.hashmap = {} # {product: [qty, unit_price]} 
+class Order:
+    def __init__(self, order_id: str):
+        self.order_id = order_id
+        self.method_calls = 0
+        self.hashmap = {} # {product: [qty, unit_price]} 
 
-#     # keep track of how many times its being called -> pass down values from each time its called 
-#     # hashmap -> {product: [qty, unit_price]} 
-#     def add_line(self, product: str, qty: int, unit_price: float):
+    # keep track of how many times its being called -> pass down values from each time its called 
+    # hashmap -> {product: [qty, unit_price]} 
+    def add_line(self, product: str, qty: int, unit_price: float):
         
-#         # every time its called increment method_calls
-#         self.method_calls += 1
+        # every time its called increment method_calls
+        self.method_calls += 1
         
-#         self.hashmap[product] = [qty, unit_price]
+        self.hashmap[product] = [qty, unit_price]
         
-#         return self.hashmap
-        
-        
-        
-        
-#     # pick up the string, loop through hashmap, remove it 
-#     def remove_line(self, product: str):
+        return self.hashmap
         
         
         
-#         # loop through hashmap -> {'widget': [2, 9.99], 'gadget': [1, 24.5]} 
-#         for widget, values in list(self.hashmap.items()):
-#             if widget == product:
-#                 # remove from hashmap 
-#                 del self.hashmap[widget]
+        
+    # pick up the string, loop through hashmap, remove it 
+    def remove_line(self, product: str):
+        
+        
+        
+        # loop through hashmap -> {'widget': [2, 9.99], 'gadget': [1, 24.5]} 
+        for widget, values in list(self.hashmap.items()):
+            if widget == product:
+                # remove from hashmap 
+                del self.hashmap[widget]
                 
                 
                 
-#         return
+        return
 
         
         
-#     # recieve unit_price for EACH object and x amount of items that r in said object and add them all up 
-#     def total(self):
+    # recieve unit_price for EACH object and x amount of items that r in said object and add them all up 
+    def total(self):
         
-#         total = 0 
+        total = 0 
         
-#         # loop through hashmap -> {'widget': [2, 9.99], 'gadget': [1, 24.5]} 
-#         for widget, values in self.hashmap.items():
-#             math = values[0] * values[1]
-#             total += math
+        # loop through hashmap -> {'widget': [2, 9.99], 'gadget': [1, 24.5]} 
+        for widget, values in self.hashmap.items():
+            math = values[0] * values[1]
+            total += math
             
-#         return round(total, 2)         
+        return round(total, 2)         
             
     
 
 
-#     # (DONE) returns how many lines have been made aka how many times add_line has bee called 
-#     def line_count(self):
+    # (DONE) returns how many lines have been made aka how many times add_line has bee called 
+    def line_count(self):
         
-#         return self.method_calls
+        return self.method_calls
 
 
 # # #NOTE: Example Usage:
@@ -253,34 +253,34 @@
 # original mistake.
 
 
-# class Engine:
-#     def __init__(self, hp: int):
-#         self.hp = hp
-#         self.run = True 
+class Engine:
+    def __init__(self, hp: int):
+        self.hp = hp
+        self.run = True 
 
-#     def start(self):
+    def start(self):
         
-#         if self.run == True: 
-#             return f"vroom ({self.hp}hp)"
-#         else:
-#             raise("RuntimeError: Engine has been disposed")
+        if self.run == True: 
+            return f"vroom ({self.hp}hp)"
+        else:
+            raise("RuntimeError: Engine has been disposed")
 
-# class Car:
-#     def __init__(self, hp: int): 
-#         # varaible "engine" equals passing the value into another class 
-#         self.engine = Engine(hp)
+class Car:
+    def __init__(self, hp: int): 
+        # varaible "engine" equals passing the value into another class 
+        self.engine = Engine(hp)
 
-#     def get_engine(self):
-#         # e is equal to what is being returned -> this is returning the literaly object 
-#         # instance for the other Engine class, so if you want to call any methods u need this 
-#         return self.engine 
+    def get_engine(self):
+        # e is equal to what is being returned -> this is returning the literaly object 
+        # instance for the other Engine class, so if you want to call any methods u need this 
+        return self.engine 
 
     
     
-#     #NOTE: we want to remove instance of class with this function 
-#     def dispose(self):
+    #NOTE: we want to remove instance of class with this function 
+    def dispose(self):
         
-#         self.engine.run = False 
+        self.engine.run = False 
         
         
             
@@ -397,9 +397,11 @@ class Bird:
 # PROBLEM 5
 # ---------
 # Implement a `Character` composed of an optional `Weapon`, `Armor`, and a list of
-# `Ability` objects, all created and owned by the character's factory method
-# `create()`. Write `attack()`, which returns total damage, and `equip()`, which
-# swaps a weapon and destroys the old one.
+# `Ability` objects, all created and owned by the character's factory method `create()`. 
+
+# Write `attack()`, which returns total damage, 
+# return `equip()`, which swaps a weapon and destroys the old one.
+
 # Note: the old weapon must be unusable after the swap. State whether the
 # character's abilities are composition or aggregation under YOUR design, and
 # defend the choice - both answers are defensible, but only with a reason.
@@ -440,6 +442,7 @@ class Character:
         
         
     # hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
+    # decorator 
     @classmethod
     def create(cls, name:str, weapon_spec:tuple, ability_specs:list):
         
@@ -498,22 +501,17 @@ class Character:
         return total_damage
             
         
-        
-        
-        
-
-
 # Example Usage:
-hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
-print(hero.attack())
-old = hero.weapon
-hero.equip(("axe", 15))
-print(hero.attack())
+# hero = Character.create("Hero", ("sword", 10), [("rage", 5), ("focus", 2)])
+# print(hero.attack())
+# old = hero.weapon
+# hero.equip(("axe", 15))
+# print(hero.attack())
 
-try:
-    print(old.damage)
-except RuntimeError as e:
-    print(f"RuntimeError: {e}")
+# try:
+#     print(old.damage)
+# except RuntimeError as e:
+#     print(f"RuntimeError: {e}")
 
 
 # Example Output:
@@ -527,3 +525,139 @@ except RuntimeError as e:
 
 
 
+# PROBLEM 6
+# ---------
+
+
+#NOTE: Association -> classes interact temporarily or hold references to each other, but they have completely independent lifecycles. 
+
+# Example of Association 
+class Teacher:
+    def __init__(self, name):
+        self.name = name
+
+class Student:
+    def __init__(self, name):
+        self.name = name
+    
+    # Association established through a method argument
+    def attend_class(self, teacher):
+        print(f"Student {self.name} is learning from Teacher {teacher.name}.")
+
+# Both objects exist entirely on their own
+# t = Teacher("Mr. Smith")
+# s = Student("Alice")
+# s.attend_class(t) 
+
+# ----------------------------------------------------------------------------
+
+#NOTE: Aggregation -> ("has-a") You DONT call the class within the INIT method, you just make a parameter and than CALL the class outside of everything 
+
+# Example of Aggreagation 
+class Professor:
+    def __init__(self, name):
+        self.name = name
+
+class Department:
+    def __init__(self, dept_name, professor):
+        self.dept_name = dept_name
+        self.professor = professor  # Stores a reference to an outside object
+
+# 1. Create the professor independently
+# prof = Professor("Dr. Jones")
+# # 2. Pass the professor into the department
+# math_dept = Department("Mathematics", prof)
+# # 3. If we delete the department, the professor still exists
+# del math_dept
+# print(prof.name)  # Output: Dr. Jones (Still lives!)
+
+# ----------------------------------------------------------------------------
+
+
+# Classify each relationship below as composition, aggregation, or association,
+# and write a one-line justification for each using the lifetime test. Then
+# implement the two you marked composition, proving in your example usage that the
+# parts do not survive the whole.
+
+#NOTE: two of these five are genuinely debatable. Identify which two and say what
+# additional requirement would settle each one.
+
+
+# a) ParkingLot  -> ParkingFloor         (Compostion) - ("Part-Of")
+# b) ParkingFloor -> ParkingSpot         (Composition) - ("Part-Of")
+
+# c) ParkingSpot -> Vehicle              (Association)
+
+# d) Ticket      -> ParkingSpot          (Association) -> the lack of any whole-part relationship: the vehicle isn't a part of the spot, just temporarily connected to it.
+ 
+# e) ParkingLot  -> Attendant            (Aggregation) - ("has-a")
+
+
+
+# Example Usage:
+# Write your own demonstration for the two composition relationships.
+
+
+
+
+# the ID, and if its open
+class ParkingSpot:
+    def __init__(self, ID:int):
+        self.ID = ID
+        self.taken = False 
+
+
+    #TODO mark spot is taken and when its open again 
+
+
+# its number + needs the spots itself (object), 
+class ParkingFloor:
+    def __init__(self, parkingFloorNumber:int, capacity:int):
+        self.parkingFloorNumber = parkingFloorNumber
+        self.capacity = capacity
+        
+        self.list_of_spots = []
+        
+        # we need to create multiple parking spot objects by looping through range of capicty and each time making an object and passing in ID 
+        for spot in range(1, capacity + 1):
+            # created an objectof parkingspot and we are passing in the value 1-(capacity/maxnumber of spots)
+            parkingspot = ParkingSpot(spot)
+            self.list_of_spots.append(parkingspot)
+            
+                        
+    
+    #TODO check how many parking spots are left x/x
+        
+    
+    
+# needs to contain the floor itself (object)
+class ParkingLot:
+    def __init__(self, floor: list):
+        
+        
+        # hold a list of parkingFloor objects with floor number and capacity        
+        self.floors = [] 
+        
+       # [60,60,60,50,50]
+        for parkingFloorNumber, capacity in enumerate(floor, start = 1):
+            self.floors.append(ParkingFloor(parkingFloorNumber, capacity))
+            
+        
+        #TODO total open spots & Per-floor summary: show each floor's number with its open/total count, like a sign at a garage entrance.
+
+
+
+
+
+# a list of the capacity of each floor, floors represented by indexs 
+parkingLot = ParkingLot([60,60,60,50,50])
+
+
+ 
+                
+                
+
+
+# Example Output:
+# Your demonstration should print evidence that the part is
+# unreachable or unusable once the whole is gone.
