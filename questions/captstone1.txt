@@ -9,6 +9,9 @@ and provide a rationale for why you believe your solution has the stated time
 and space complexity.
 
 
+
+
+
 PROBLEM 2  (Interface)
 ---------
 Every shape must be able to report its area, but each shape calculates it
