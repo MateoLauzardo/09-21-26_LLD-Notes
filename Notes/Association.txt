@@ -1,0 +1,33 @@
+#NOTE - association is the branch of the specilized forms of itself (Composition and aggregation). two completely independent 
+classes are connected through their objects, meaning they have a "has-a" or relationship with no ownership or lifecycle dependency. 
+Both objects can exist on their own without the other.
+
+
+**EXAMPLE: 
+__________________________________________________________________________
+
+class Driver:
+    def __init__(self, name: str):
+        self.name = name  # The driver exists independently
+
+class Car:
+    def __init__(self, model: str):
+        self.model = model
+        self.driver = None  # Car starts with no driver assigned
+
+    def assign_driver(self, driver: Driver):
+        self.driver = driver
+        print(f"{self.driver.name} is now driving the {self.model}.")
+
+# 1. Create two independent objects
+driver_john = Driver("John")
+my_car = Car("Tesla Model 3")
+
+# 2. Establish the association
+my_car.assign_driver(driver_john)
+
+# 3. Disassociate them (proving independent lifecycles)
+my_car.driver = None
+print(f"Driver {driver_john.name} still exists even if the car has no driver.")
+
+__________________________________________________________________________

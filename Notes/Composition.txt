@@ -1,6 +1,11 @@
 Composition -> means one class is built out of other, and those objects are usually created right inside __init__ and stored 
 as attributes.
 
+In composition, one of the classes is composed of one or more instance of other classes. In other words, 
+one class is container and other class is content and if you delete the container object then all of its contents objects are also 
+deleted.
+
+
 *NOTE - remember the phrase -> ("Part-Of")
 
 * It's a design princible where compelx systems or objects are built by combining similar, simpler, reusable peices of code. 

@@ -677,10 +677,6 @@ lot.floors[0].list_of_spots[5].leave()   # expect "not parked" message
 
 
  
-                
-                
-
-
 # Example Output:
 # Your demonstration should print evidence that the part is
 # unreachable or unusable once the whole is gone.
