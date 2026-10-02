@@ -3,7 +3,9 @@
 # # You create a floor by giving it a floor number and how many spots of each type.
 # # The floor builds its own spots. You ask it for a free spot of a certain type,
 # # mark that spot as occupied, and occupancy() shows how many spots are taken.
-# from enum import Enum
+
+
+from enum import Enum
 
 
 class VehicleType(Enum):
@@ -581,7 +583,8 @@ class ParkingSpot:
             self.taken = True
             
         else:
-            print("spot is already taken")
+            # print("spot is already taken")
+            pass
     
 
     def leave(self):
@@ -590,7 +593,8 @@ class ParkingSpot:
             self.taken = False
         
         else:
-            print("youre not parked")
+            # print("youre not parked")
+            pass
 
 
 
@@ -659,16 +663,16 @@ class ParkingLot:
 # a list of the capacity of each floor, floors represented by indexs 
 lot = ParkingLot([60, 60, 60, 50, 50])
 
-print("Open at start:", lot.total_open_spots())            # expect 280
+# print("Open at start:", lot.total_open_spots())            # expect 280
 
 # park 2 cars on floor 1, 1 car on floor 4
 lot.floors[0].list_of_spots[0].park() # goes to index 0, which is an object of parking floor which has access to list of spots so index 0 
 lot.floors[0].list_of_spots[1].park()
 lot.floors[3].list_of_spots[0].park()
 
-print("Floor 1 open:", lot.floors[0].how_many_spots_left())  # expect 58
-print("Floor 4 open:", lot.floors[3].how_many_spots_left())  # expect 49
-print("Total open:", lot.total_open_spots())                 # expect 277
+# print("Floor 1 open:", lot.floors[0].how_many_spots_left())  # expect 58
+# print("Floor 4 open:", lot.floors[3].how_many_spots_left())  # expect 49
+# print("Total open:", lot.total_open_spots())                 # expect 277
 
 # edge cases
 lot.floors[0].list_of_spots[0].park()    # expect "already taken" message
@@ -680,3 +684,31 @@ lot.floors[0].list_of_spots[5].leave()   # expect "not parked" message
 # Example Output:
 # Your demonstration should print evidence that the part is
 # unreachable or unusable once the whole is gone.
+
+
+# ----------------------------------------------------------------------------
+
+
+# simple example 
+class Human():
+
+    def run(self):
+        return 5 
+        
+        
+class Heart():
+    def __init__(self):
+        # this is comp where you CALL A CLASS INSIDE ANOTHERS CLASS CONSTRUCTOR 
+        self.human = Human()
+    
+    # this function now can grab anything from humans function
+    #NOTE: when you make an object and call a function that is returning something. Whatever variable that is calling is set equal to said value 
+    def test(self):
+        
+        run_number = self.human.run()
+        
+        print(run_number + 5)
+        
+        
+heart = Heart()
+heart.test()
