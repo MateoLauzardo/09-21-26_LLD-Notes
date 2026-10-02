@@ -710,5 +710,54 @@ class Heart():
         print(run_number + 5)
         
         
-heart = Heart()
-heart.test()
+# heart = Heart()
+# heart.test()
+
+
+
+# ----------------------------------------------------------------------------
+
+
+
+class Stomach:
+    def __init__(self, hunger_lvl: float = 0.0):
+        self.hunger_lvl = hunger_lvl
+
+    def is_hungry(self) -> bool:
+        return self.hunger_lvl >= 5
+
+    def eat(self, amount: float):
+        self.hunger_lvl = max(0.0, self.hunger_lvl - amount)
+
+
+class Energy:
+    def __init__(self, tired_lvl: float = 0.0):
+        self.tired_lvl = tired_lvl
+
+    def is_tired(self) -> bool:
+        return self.tired_lvl >= 5
+
+
+class Person:
+    def __init__(self, name: str, hunger: float, tiredness: float):
+        self.name = name
+        # Composition: Person creates and owns its parts
+        self.stomach = Stomach(hunger)
+        self.energy = Energy(tiredness)
+
+    def status(self):
+        if self.stomach.is_hungry():
+            print(f"CODE RED! {self.name} is hungry ({self.stomach.hunger_lvl})")
+        else:
+            print(f"{self.name} is fed")
+        if self.energy.is_tired():
+            print(f"CODE RED! {self.name} is tired ({self.energy.tired_lvl})")
+
+    def feed(self, amount: float):
+        self.stomach.eat(amount)
+
+
+kelly = Person("Kelly", hunger=5.0, tiredness=7.0)
+kelly.status()
+kelly.feed(3)
+kelly.status()

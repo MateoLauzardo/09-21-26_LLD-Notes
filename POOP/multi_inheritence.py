@@ -1,4 +1,6 @@
+
 #!SECTION -> MULTI INHERITENCE 
+#STUB - think of it as an object that needs to inherit both x and y (fishes are both predator and pray) 
 
 # grandparent
 class Animal():
@@ -12,7 +14,6 @@ class Animal():
     def sleep(self):
         print(f"{self.name} is sleeping")
 
-
 # parent
 class Predator(Animal):
     def hunt(self):
@@ -22,7 +23,6 @@ class Prey(Animal):
     def flee(self):
         print(f"{self.name} is fleeing")
         
-
 # child
 class Rabbit(Prey):
     pass
@@ -33,7 +33,6 @@ class Fox(Predator):
 #NOTE: Multi Inheritence (inherit from more then one parent)
 class Fish(Prey, Predator):
     pass
-
 
 # creating objects 
 # rabbit = Predator("Bugs")
@@ -97,4 +96,4 @@ fusion = Fusion_car("fusion_mateo")
 # fusion.honda_honk()
 # fusion.ford_honk()
 
-#____________________________________________
+#_______________________________________________________________________________________

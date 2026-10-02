@@ -1,16 +1,13 @@
 
-
-
 #!SECTION -> super() function
+
+#STUB - tell youself, what attibutes in constructor are being repeated over and over 
 
 #NOTE: this function is used in a child class to call methods
 # from a parent class
+#NOTE: super class that you want to be reusable for other classes)
 
-
-
-#NOTE: super class (instead of having color and filled in each constructor which would add more lines of code, super class stores all values that you want to be reusable for other classes)
-
-# parent
+# ps (instead of having color and filled in each constructor which would add more lines of code, super class stores all values
 class Shape:
     def __init__(self, color, filled):
         self.color = color
@@ -18,8 +15,7 @@ class Shape:
         
     def describe(self):
         print(f"it is {self.color} and its {self.filled} that its filled.")
-    
-        
+            
 # child
 class Circle(Shape):
     def __init__(self, color:str, filled:bool, raidus:int):
@@ -55,8 +51,6 @@ circle = Circle("yellow", True, 5)
 square = Square("red", False, 10)
 triangle = Triangle("blue", True, 5, 10)
 
-
-
 #NOTE: outputs
 # print(circle.color)
 # print(circle.raidus)
@@ -66,4 +60,55 @@ triangle = Triangle("blue", True, 5, 10)
 # square.describe()
 # triangle.describe()
 
-#____________________________________________
+#_______________________________________________________________________________________
+
+
+#super function + inheritence: 
+# parent / super function
+class Animal():
+    
+    def __init__(self, name:str):
+        self.name = name 
+    
+    def eat(self):
+        print(f"the {self.name} eat!")
+    
+    def sleep(self):
+        print(f"the {self.name} is sleeping")
+    
+# child
+class Cat(Animal):
+    
+    def __init__(self, name: str, color: str, age:int):
+        super().__init__(name) # animal class handels the name / super function
+        self.color = color # this is not apart of the super class so we call these by itself 
+        self.age = age # this is not apart of the super class so we call these by itself 
+        
+    
+    def speak(self):
+        print("meow")
+        
+    def cat_color(self):
+        print(f"the {self.name}s color is {self.color}")
+    
+    
+    #NOTE: calling other class methind in FUNCTIONS based off inheritence 
+    def night_routine(self):
+        self.eat()
+        self.sleep()
+        self.speak()
+        
+    
+
+cat = Cat("cat", "yellow", 10) # cat doesnt have its own constructor so borrows Animals 
+cat.night_routine()
+cat.sleep()
+    
+    
+animal = Animal("dog")
+# animal.eat()
+# animal.sleep()
+# animal.speak()  #NOTE: you see this wont work becuase that class is only for Cat. When you call Cat it gets ALL of animals stuff + its own stuff 
+
+
+#_______________________________________________________________________________________

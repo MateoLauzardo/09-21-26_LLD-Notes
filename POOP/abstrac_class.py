@@ -1,4 +1,7 @@
-#!SECTION -> ABSTRACT CLASSES / METHODS 
+
+#!SECTION -> ABSTRACT CLASSES (litterally 1 of the princelpesl of OOP)
+#STUB - Think of it as "something apart that won't change,"
+
 
 from abc import ABC, abstractmethod
 
@@ -63,16 +66,19 @@ class Boat(Vechine):
 
 # abstract class -> class that has abstract method. What this does it basically allows you to call this SAME class in other classes 
 # you can pass in parma
+
+
+# NOTE: the reason for abstract is anything that calls itself choice NEEDS TO HAVE THE METHODS 
 class Choice(ABC):
     
     @abstractmethod
     def decision(self):
-        pass
+        pass 
         
 
 class paper(Choice):
     
-    def decision(self, finger: int): #TODO - find out answer to this question 
+    def decision(self): #NOTE: you never change the function into something new. the whole point of abstraction is a promise every Choice has decision(), and you call it like this."
         print("paper") 
 
 class rock(Choice):
@@ -91,52 +97,6 @@ class scizzor(Choice):
 #____________________________________________
 
 
-
-
-# parent / super function
-class Animal():
     
-    def __init__(self, name:str):
-        self.name = name 
-    
-    def eat(self):
-        print(f"the {self.name} eat!")
-    
-    def sleep(self):
-        print(f"the {self.name} is sleeping")
-    
-# child
-class Cat(Animal):
-    
-    def __init__(self, name: str, color: str):
-        super().__init__(name) # animal class handels the name / super function
-        self.color = color 
-    
-    def speak(self):
-        print("meow")
-        
-    def cat_color(self):
-        print(f"the {self.name}s color is {self.color}")
-    
-    
-    #NOTE: calling other class methind in FUNCTIONS based off inheritence 
-    def night_routine(self):
-        self.eat()
-        self.sleep()
-        self.speak()
-        
-    
-
-cat = Cat("cat", "yellow") # cat doesnt have its own constructor so borrows Animals 
-cat.night_routine()
-    
-    
-animal = Animal("dog")
-# animal.eat()
-# animal.sleep()
-# animal.speak()  #NOTE: you see this wont work becuase that class is only for Cat. When you call Cat it gets ALL of animals stuff + its own stuff 
-    
-    
-# ____________________________________________
 
 
