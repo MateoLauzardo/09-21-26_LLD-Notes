@@ -3,7 +3,7 @@
 
 # difference between aggregation and composition and aggreagtion classes can live on its own while comp can not.
 
-
+#! Aggregation "has-a" relationship -> you pass object as a parameter. so the passing of said object is in the output, not the logic code 
 
 #___________________________________________________________________________________
 
