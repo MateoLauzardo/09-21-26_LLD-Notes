@@ -1,3 +1,13 @@
+# 
+
+#!SECTION -> Composition relationship relies on its componenet part for its functionality. For example a house has rooms, if you destroy the hosue u destroy the rooms.
+
+
+
+
+
+#___________________________________________________________________________________
+
 # #NOTE: PROBLEM 1
 
 # # You create a floor by giving it a floor number and how many spots of each type.

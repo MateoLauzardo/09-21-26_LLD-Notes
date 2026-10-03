@@ -1,6 +1,10 @@
 
-#!SECTION -> MULTI INHERITENCE 
-#STUB - think of it as an object that needs to inherit both x and y (fishes are both predator and pray) 
+#!SECTION -> MULTI INHERITENCE: think of it as an object that needs to inherit both x and y (fishes are both predator and pray) 
+
+
+
+
+#___________________________________________________________________________________
 
 # grandparent
 class Animal():
@@ -44,7 +48,7 @@ class Fish(Prey, Predator):
 # fish.sleep()
 # fish.hunt()
 
-#____________________________________________
+#___________________________________________________________________________________
 
 #NOTE: Own Example 
 # grand parent class 

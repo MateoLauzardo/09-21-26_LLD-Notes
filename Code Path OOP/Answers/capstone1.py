@@ -50,3 +50,93 @@ answer1 = example_problem_1()
 # Light.YELLOW
 # Light.RED
  
+ 
+
+
+# =============================================================================
+# PROBLEM 3  (Composition)
+# ---------
+# A house is made of rooms. A room has no meaning outside its house, and when the
+# house is demolished, its rooms go with it. 
+
+# Implement `House` so that it creates
+# its own `Room` objects from a list of names, 
+# implement `room_names()`.
+
+# Note: the House must build the Room objects itself, inside __init__. If Room
+# objects are created outside and passed in, the lifetimes are no longer tied together and it isn't composition.
+
+# Evaluate the time and space complexity of `House.__init__()`. Define your
+# variables and provide a rationale for why you believe your solution has the
+# stated time and space complexity.
+# =============================================================================
+ 
+
+# class house -> has its own data, rooms
+# class House():
+#     def __init__(self, rooms:list[str]):
+#         self.rooms = rooms 
+
+
+# # class room -> has its own data names
+# class Room():
+#     def __init__(self, House):
+#         self.list = []
+#         self.house = House
+    
+#     def add_rooms_to_list(self):
+#         for room in self.house.rooms:
+#             self.list.append(room)
+            
+        
+#         print(self.list) 
+                        
+                        
+    
+            
+ 
+# # Complexity of House.__init__():
+# # Time:
+# # Space:
+# # Variables:
+# # Rationale:
+ 
+ 
+# h = House(["Kitchen", "Bedroom", "Bathroom"])
+# r = Room(h)
+# r.add_rooms_to_list() 
+ 
+ 
+# Example Output:
+# ['Kitchen', 'Bedroom', 'Bathroom']
+# Room
+
+
+
+
+class House:
+    def __init__(self, names: list[str]):
+        self.names = names
+        
+        self.Room = Room
+        self.rooms = []
+
+    def room_names(self):
+        for room in self.names:
+            self.rooms.append(self.Room(room))
+
+        result = []
+        for room in self.rooms:
+            result.append(room.name)
+        return result
+
+
+class Room:
+    def __init__(self, name: str):
+        self.name = name
+        
+        
+    
+h = House(["Kitchen", "Bedroom", "Bathroom"])
+x = h.room_names()
+print(x)

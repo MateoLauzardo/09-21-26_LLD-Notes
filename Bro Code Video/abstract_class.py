@@ -1,6 +1,12 @@
 
-#!SECTION -> ABSTRACT CLASSES (litterally 1 of the princelpesl of OOP)
-#STUB - Think of it as "something apart that won't change,"
+#!SECTION -> ABSTRACT CLASSES (litterally 1 of the princelpesl of OOP) Think of it as "something apart that won't change,"
+
+
+
+
+
+
+#___________________________________________________________________________________
 
 
 from abc import ABC, abstractmethod
@@ -61,7 +67,7 @@ class Boat(Vechine):
 # boat.stop()
 
 
-#____________________________________________
+#___________________________________________________________________________________
 
 
 # abstract class -> class that has abstract method. What this does it basically allows you to call this SAME class in other classes 
@@ -92,9 +98,7 @@ class scizzor(Choice):
     def decision(self):
         return super().decision()
     
-    
-    
-#____________________________________________
+#___________________________________________________________________________________
 
 
     

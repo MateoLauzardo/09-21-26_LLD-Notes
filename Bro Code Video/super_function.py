@@ -1,11 +1,10 @@
 
-#!SECTION -> super() function
+#!SECTION -> super() function -> tell youself, what attibutes in constructor are being repeated over and over 
 
-#STUB - tell youself, what attibutes in constructor are being repeated over and over 
 
-#NOTE: this function is used in a child class to call methods
-# from a parent class
-#NOTE: super class that you want to be reusable for other classes)
+
+
+#___________________________________________________________________________________
 
 # ps (instead of having color and filled in each constructor which would add more lines of code, super class stores all values
 class Shape:
@@ -51,7 +50,7 @@ circle = Circle("yellow", True, 5)
 square = Square("red", False, 10)
 triangle = Triangle("blue", True, 5, 10)
 
-#NOTE: outputs
+# outputs
 # print(circle.color)
 # print(circle.raidus)
 # print(f"the circles color is {circle.color}")
@@ -109,6 +108,5 @@ animal = Animal("dog")
 # animal.eat()
 # animal.sleep()
 # animal.speak()  #NOTE: you see this wont work becuase that class is only for Cat. When you call Cat it gets ALL of animals stuff + its own stuff 
-
 
 #_______________________________________________________________________________________

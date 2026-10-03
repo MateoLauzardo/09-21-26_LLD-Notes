@@ -1,8 +1,12 @@
-# Polymorphism -> means to have many forms. "poly" means many
+# Polymorphism -> means to have many forms. "poly" means many. 
 
 #                   Two ways to achieve are:
 #                   1.) inheritence 
-#                   2. Duck Typing 
+#                   2. Duck Typing / -> #NOTE: This is located at (Line: 62)
+
+#!SECTION -> "mulitple instences of inheritence".
+
+#___________________________________________________________________________________
 
 
 from abc import ABC, abstractmethod
@@ -13,7 +17,6 @@ class Shape(ABC):
     @abstractmethod
     def area(self):
         pass
-
 
 class Circle(Shape):
     
@@ -33,7 +36,6 @@ class Triangle(Shape):
         self.base = base
         self.height = height 
     
-    #!SECTION this is the example of poly we r calling area() the same way on any of them without knowing which class you're dealing with, and each responds with its own version
     def area(self):
         return self.base * self.height * 0.5 
 
@@ -58,7 +60,47 @@ class Pizza(Circle):
 # for shape in shapes: 
 #     print(f"shape area is: {shape.area()}cm")
     
-pizza = Pizza("pepperoni", 15)
-print(pizza.topping) #the attribute
-print(f"pizza area is: {pizza.area()}")  #literally the math from parent class )
-print(f"testing method for raids: {pizza.raidus_test()}")
+# pizza = Pizza("pepperoni", 15)
+# print(pizza.topping) #the attribute
+# print(f"pizza area is: {pizza.area()}")  #literally the math from parent class )
+# print(f"testing method for raids: {pizza.raidus_test()}")
+
+
+#___________________________________________________________________________________
+
+
+#!SECTION Duck Typing: as long as an object looks like another can be that type 
+# - "if it quacks like a duck its prob a duck"
+
+class Animal():
+    alive = True
+    
+    
+class Dog(Animal):
+    def speak(self):
+        print("woof")
+        
+    
+class Cat(Animal):
+    def speak(self):
+        print("meow")
+        
+        
+# NOT an animal -> not inheriting 
+class Car():
+    
+    # NOT inheriting from animal but same premise
+    alive = False 
+        
+    def speak(self):
+        print("honk")
+        
+            
+    
+animals = [Dog(), Cat(), Car()]
+
+for animal in animals:
+    animal.speak()
+    print(animal.alive)
+
+#___________________________________________________________________________________
