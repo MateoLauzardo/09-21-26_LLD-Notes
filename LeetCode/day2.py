@@ -123,7 +123,74 @@ answer3 = gcd_of_stings("ABCABC", "ABC")
 
 #________________________________________________________________________________________
 
+#NOTE: Question 4) 
 
+#! DFS (Depth FIRST search) going down as deep as it can first than going up and doing that again. 
+
+# Given the root of a binary tree, return True if the tree is balanced and False otherwise.
+
+# A balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+        
+node1 = TreeNode(3)
+node2 = TreeNode(9)
+node3 = TreeNode(20)
+node4 = TreeNode(15)
+node5 = TreeNode(7)
+
+node1.left = node2
+node1.right = node3
+node3.left = node4
+node3.right = node5
+
+
+    #   3
+    #  /  \
+    # 9   20
+    #    /  \  
+    #   15   7
+    
+# Output: True
+
+      
+#! -> Because you have parameters equal to something here you do NOT need to pass in a value 
+
+def is_balanced(root):
+        
+    balanced = [True]
+        
+    def count(node):
+            
+        # base case
+        if not node:
+            return 0 
+        
+        # recurssion step1
+        left = count(node.left)
+        right = count(node.right)
+        
+        
+        
+        if abs(left - right) > 1:
+            balanced[0] = False
+            return 0 
+        
+        # recurrsion step2
+        return max(left, right) + 1
+
+    count(root)
+    
+
+    return f"answer is: {balanced[0]}"
+
+    
+answer4 = is_balanced(node1)
+print(answer4)
 
 
             
