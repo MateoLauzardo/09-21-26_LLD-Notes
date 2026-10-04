@@ -2,7 +2,7 @@
 
 #                   Two ways to achieve are:
 #                   1.) inheritence 
-#                   2. Duck Typing / -> #NOTE: This is located at (Line: 62)
+#                   2. Duck Typing / -> #NOTE: This is located at (Line: 72)
 
 #!SECTION -> "mulitple instences of inheritence".
 
