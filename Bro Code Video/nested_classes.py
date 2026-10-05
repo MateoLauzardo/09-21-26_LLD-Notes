@@ -32,7 +32,9 @@ class Company():
     
     #! this is an instance of nested class, we are calling the class inside to get a certain output    
     def add_employee(self, name, position):
+        #NOTE: you use self cuz it allows u to see from class company which when you do self.classname can get anything
         new_employee = self.Employee(name, position)
+        
         
         self.employees.append(new_employee)
     
@@ -54,5 +56,50 @@ company.add_employee("y", "idk2")
         
 #___________________________________________________________________________________
 
+#! Implementing nested classes and class methods 
 
+class Github():
+        
+    class Contributors():
+        
+        list_of_people = []
+        
+        def __init__(self, name, perms):
+            self.name = name 
+            self.perms = perms
+            Github.Contributors.list_of_people.append(self.name)
+        
+        
+            
+        @classmethod 
+        def list_contributors(cls):
+            # for names in Github.Contributors.list_of_people:
+            #     print(names)
+            return cls.list_of_people
+            
+            
+                
+    def __init__(self, organization):
+        self.organization = organization
+        # self.contributors = []
+
+        
+    def add_contributor(self, name, perms):
+        self.Contributors(name, perms)
+        
+    
+    def get_list_contributors(self):
+            return self.Contributors.list_contributors()
+    
+  
+  
+github = Github("MTZ")
+github.add_contributor("mateo","owner")
+github.add_contributor("x","normal")
+print(github.get_list_contributors())
+
+
+#___________________________________________________________________________________  
+    
+    
 

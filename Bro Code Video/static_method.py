@@ -1,4 +1,4 @@
-# static method - a method that belongs to a lcass rather than an object 
+# static method - a method that belongs to a class rather than an object 
 
 # instance methods - best for operations on instance of the class (object)
 # static methods - best for utility functiosn that do not need access to class data 
@@ -17,7 +17,8 @@ class Employee():
     def get_info(self):
         return f"the name is {self.name} and position is {self.position}"
     
-    #! does not rely on objects to use this method (STATICMETHOD)
+    #! does not rely on u creating object for class 
+    #! to use this method (STATICMETHOD)
     @staticmethod
     def is_valid_position(position):
         
@@ -35,7 +36,9 @@ employee4 = Employee("z", "idk")
 
 
            
-#NOTE: we are not creating an object like above. We just call class and method 
+#! this is an instance of staic method we are not 
+#! creating an object like above. We just call class 
+#! and method 
 print(Employee.is_valid_position("Manager"))
 
 
