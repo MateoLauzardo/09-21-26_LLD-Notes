@@ -1,0 +1,340 @@
+========================================
+ASSOCIATION - PRACTICE PROBLEMS (Python)
+========================================
+
+
+PROBLEM 1
+---------
+A doctor sees many patients and a patient sees many doctors. Neither owns the
+other and neither controls the other's lifetime. Implement this many-to-many
+association so that `Doctor.add_patient()` keeps BOTH sides in sync, and calling
+it twice with the same patient does not create a duplicate.
+Note: the classic bug here is updating one side and forgetting the other. Make
+`doctor.patients` and `patient.doctors` impossible to disagree.
+Evaluate the time and space complexity of `add_patient()`. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+class Doctor:
+    def __init__(self, name):
+        self.name = name
+        self.patients = []
+
+    def add_patient(self, patient):
+        pass
+
+class Patient:
+    def __init__(self, name):
+        self.name = name
+        self.doctors = []
+```
+
+Example Usage:
+
+```
+d = Doctor("Dr. Reyes")
+p = Patient("Ana")
+d.add_patient(p)
+d.add_patient(p)
+print([x.name for x in d.patients])
+print([x.name for x in p.doctors])
+```
+
+Example Output:
+
+```
+['Ana']
+['Dr. Reyes']
+```
+
+
+PROBLEM 2
+---------
+A person holds at most one passport and a passport belongs to exactly one
+person. Implement this one-to-one association with a method `issue_passport()`.
+If the passport is already assigned to someone else, raise a `ValueError`. If
+the person already holds a different passport, the old one must be released.
+Note: one-to-one is the multiplicity that is easiest to corrupt, because two
+assignments can leave three objects pointing at each other incorrectly.
+State the multiplicity in UML notation and describe how you would draw this
+relationship on a class diagram.
+
+```
+class Passport:
+    def __init__(self, number):
+        self.number = number
+        self.holder = None
+
+class Person:
+    def __init__(self, name):
+        self.name = name
+        self.passport = None
+
+    def issue_passport(self, passport):
+        pass
+```
+
+Example Usage:
+
+```
+ana = Person("Ana")
+luis = Person("Luis")
+p = Passport("X123")
+
+ana.issue_passport(p)
+print(ana.passport.number, p.holder.name)
+luis.issue_passport(p)
+```
+
+Example Output:
+
+```
+X123 Ana
+ValueError: Passport X123 is already held by Ana
+```
+
+
+PROBLEM 3
+---------
+A `Ticket` refers to exactly one `ParkingSpot`, and a spot holds at most one
+active ticket. Neither creates the other and neither destroys the other - when
+the ticket closes, the spot is freed and goes on existing.
+Write `ParkingSpot.assign()` and `Ticket.close()`. Closing an already-closed
+ticket must raise a `ValueError`.
+Note: this is association, not composition. Your `close()` implementation is the
+proof - explain in one sentence why, and say what the code would look like if it
+were composition instead.
+
+```
+class ParkingSpot:
+    def __init__(self, spot_id):
+        self.spot_id = spot_id
+        self.ticket = None
+
+    def is_available(self):
+        pass
+
+class Ticket:
+    def __init__(self, ticket_id, spot):
+        pass
+
+    def close(self):
+        pass
+```
+
+Example Usage:
+
+```
+spot = ParkingSpot("A1")
+print(spot.is_available())
+t = Ticket("T1", spot)
+print(spot.is_available())
+t.close()
+print(spot.is_available())
+t.close()
+```
+
+Example Output:
+
+```
+True
+False
+True
+ValueError: Ticket T1 is already closed
+```
+
+
+PROBLEM 4
+---------
+Given the bidirectional friendship association below, write `mutual_friends()`,
+which takes two people and returns a sorted list of the names of people who
+appear in both friend lists.
+Note: friendship is symmetric, so `add_friend()` must update both sides. Assume
+the graph is already built correctly when `mutual_friends()` runs.
+Evaluate the time and space complexity of `mutual_friends()`. Define your
+variables and provide a rationale for why you believe your solution has the
+stated time and space complexity. State whether your answer changes if
+`friends` is a list versus a set, and why.
+
+```
+class Person:
+    def __init__(self, name):
+        self.name = name
+        self.friends = []
+
+    def add_friend(self, other):
+        pass
+
+def mutual_friends(a, b):
+    pass
+```
+
+Example Usage:
+
+```
+ana, luis, mia, sam = Person("Ana"), Person("Luis"), Person("Mia"), Person("Sam")
+ana.add_friend(mia)
+ana.add_friend(sam)
+luis.add_friend(mia)
+luis.add_friend(sam)
+print(mutual_friends(ana, luis))
+```
+
+Example Output:
+
+```
+['Mia', 'Sam']
+```
+
+
+PROBLEM 5
+---------
+Sometimes the relationship itself carries data that belongs to neither side. A
+student enrolls in a course, and that enrollment has a date and a grade.
+Implement `Enrollment` as the class that models the association, and write
+`Student.enroll()` so that the student, the course, and the enrollment record
+are all reachable from one another.
+Note: name what this pattern is called in UML terms. Then explain why the grade
+cannot live on `Student` and cannot live on `Course`.
+Evaluate the time and space complexity of `Student.gpa()`. Define your variables
+and provide a rationale for why you believe your solution has the stated time
+and space complexity.
+
+```
+class Course:
+    def __init__(self, title):
+        self.title = title
+        self.enrollments = []
+
+class Enrollment:
+    def __init__(self, student, course, date):
+        pass
+
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.enrollments = []
+
+    def enroll(self, course, date):
+        pass
+
+    def gpa(self):
+        pass
+```
+
+Example Usage:
+
+```
+math = Course("Calculus")
+ana = Student("Ana")
+e = ana.enroll(math, "2026-01-15")
+e.grade = 4.0
+print(len(math.enrollments), e.student.name, e.course.title)
+print(ana.gpa())
+```
+
+Example Output:
+
+```
+1 Ana Calculus
+4.0
+```
+
+
+PROBLEM 6
+---------
+The code below builds a bidirectional association but only updates one side.
+Identify the symptom a caller would actually observe, then fix `enroll()` so
+both sides stay consistent. Add a matching `drop()` that removes the link from
+both sides.
+Note: after your fix, write one sentence on the real cost of bidirectional
+associations in Python - specifically what the two references do to garbage
+collection, and whether that actually matters here.
+
+```
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses = []
+
+class Course:
+    def __init__(self, title):
+        self.title = title
+        self.students = []
+
+    def enroll(self, student):
+        self.students.append(student)
+
+    def drop(self, student):
+        pass
+```
+
+Example Usage:
+
+```
+ana = Student("Ana")
+math = Course("Calculus")
+math.enroll(ana)
+print(len(math.students), len(ana.courses))
+math.drop(ana)
+print(len(math.students), len(ana.courses))
+```
+
+Example Output:
+
+```
+1 0
+1 0
+```
+
+
+PROBLEM 7
+---------
+Rewrite Problem 3 so that `Ticket` stores only `spot_id` as a string instead of
+holding the `ParkingSpot` object directly. Write a `ParkingLot` class that owns
+a lookup from spot id to spot, and rewrite `close()` to resolve the id through
+the lot.
+Note: this replaces a direct object association with an indirect one.
+State one concrete thing this version makes easier and one thing it makes
+harder. Evaluate the time complexity of `close()` in both versions and explain
+why they differ or why they do not.
+
+```
+class ParkingSpot:
+    def __init__(self, spot_id):
+        self.spot_id = spot_id
+        self.ticket_id = None
+
+class ParkingLot:
+    def __init__(self, spots):
+        pass
+
+    def get_spot(self, spot_id):
+        pass
+
+class Ticket:
+    def __init__(self, ticket_id, spot_id):
+        self.ticket_id = ticket_id
+        self.spot_id = spot_id
+        self.closed = False
+
+    def close(self, lot):
+        pass
+```
+
+Example Usage:
+
+```
+lot = ParkingLot([ParkingSpot("A1"), ParkingSpot("A2")])
+t = Ticket("T1", "A1")
+lot.get_spot("A1").ticket_id = "T1"
+t.close(lot)
+print(lot.get_spot("A1").ticket_id)
+```
+
+Example Output:
+
+```
+None
+```
