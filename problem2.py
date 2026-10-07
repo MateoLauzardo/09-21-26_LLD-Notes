@@ -26,42 +26,68 @@ class Song():
 
 class Playlist():
     
-    count = 0 
+    # class method varaibles 
     playlist_count = 0 
     
+    
+    #TODO - is a list of events such as, "added beat it", "removed beat it"
     class History():
         def __init__(self):
-            pass 
+            self.history_list = []
         
         def log(self, action):
-            pass
+            self.history_list.append(action)
         
         
     
     def __init__(self, name):
         self.name = name
-        self.playlist_count += 1 
+        
+        Playlist.playlist_count += 1 
+        
+        # we do .self cuz it lives inside playlist aka "self"
+        #! for comp, you create the object within the constructor. 
+        self.history = self.History()
+         
         self.list = []
+
     
-    
-    #NOTE: song will be a "Song" object from the class above  
     def add_song(self, song):        
         self.list.append(song)
-    
+        
+        self.history.log(f"added {song.title}")
+        
     
     def remove_song(self, title):
-        for song in self.list:
-            if title in self.list:
-                self.list.remove(title)
+        self.list = [song for song in self.list if song.title != title]
+
+        self.history.log(f"removed {title}")
+    
+    
+
+    def get_history(self):
+        return self.history.history_list
+
+    
+    def return_playlist_songs(self):
+        song_names = []
+        
+        for songs in self.list:
+            song_names.append(songs.title)
+
+        return song_names
     
     
     @classmethod
     def total_playlists(cls):
         return cls.playlist_count
     
+    
     @staticmethod
-    def get_history(seconds):
-        pass 
+    def format_duration(seconds):
+        # 120 seconds -> 2.00 
+        result = seconds / 60
+        return f"{result:.2f}"
     
     
     
@@ -69,8 +95,11 @@ song1 = Song("come as you are", "Nirvana", 2.00)
 song2 = Song("beat it", "MJ", 3.00)
 song3 = Song("let it be", "beatels", 2.50)
 
-
-
+playlist = Playlist("yolo")
+playlist.add_song(song1)
+playlist.add_song(song2)
+playlist.add_song(song3)
+print(playlist.return_playlist_songs())
 
 
 
