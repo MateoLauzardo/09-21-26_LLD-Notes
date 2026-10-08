@@ -21,13 +21,52 @@
 # Get one example fully working before expanding.
 
 
-# No dependencies first (enums, helpers like Engine).
-# Then the parent / base class (Vehicle).
-# Then the children (Car, Aircraft).
-# Then the most complex class last (multiple inheritance like FlyingCar).
+#1.) No dependencies first (enums, helpers like Engine). (✅)
+#2.) Then the parent / base class (Vehicle). (✅)
+#3.) Then the children (Car, Aircraft). (✅)
+#4.) Then the most complex class last (multiple inheritance like FlyingCar).
+
+
+#! Step 2: Parent (vechile)
+
+# Vehicle
+# __init__(name, fuel, horsepower)
+# start()
+# describe()
+# move() (abstract)
+
+#! Step 3: Children (car, aircraft)
+
+# Car
+# __init__(wheels=4, **kwargs)
+# describe()
+# move()
+
+# Aircraft
+# __init__(max_altitude, **kwargs)
+# describe()
+# move()
+
+#! Step 4: Most complex (FlyingCar)
+
+# FlyingCar
+# __init__(**kwargs)
+# toggle_mode()
+# move()
 
 
 # -------------------------------------------------------------------
+
+
+#TODO - review this stuff 
+# super needs to be reviewed 
+# kwargssd 
+
+
+
+# -------------------------------------------------------------------
+
+
 
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -50,52 +89,87 @@ class Engine:
         
     @staticmethod
     def hp_to_kw(hp):
-        return (hp *0.7457, 1)
+        return round(hp *0.7457, 1)
 
-
+#2.) parent
 class Vehicle(ABC):
-    def __init__(self, name, fuel, horsepower):
-        pass
+    def __init__(self, name:str, fuel, horsepower:int):
+        self.name = name 
+        self.fuel = fuel
+        #! composition 
+        self.engine = Engine(horsepower)
 
     def start(self):
-        pass
+        self.engine.start()
+        return f"{self.name} engine ({self.engine.horsepower}hp) started."
 
     def describe(self):
-        pass
+        return f"{self.name} [{self.fuel.name}]"
 
     @abstractmethod
     def move(self):
-        pass
+        return
+    
+    
 
 class Car(Vehicle):
+    #! kwargs allows you to pass any number of NEW parameters attirbutes 
     def __init__(self, wheels=4, **kwargs):
-        pass
-
+        super().__init__(**kwargs)
+        self.wheels = wheels
+        
+        
     def describe(self):
-        pass
+        return f"{super().describe()} | wheels: {self.wheels}"
+
 
     def move(self):
-        pass
+        return f"{self.name} is moving"
+
+
 
 class Aircraft(Vehicle):
     def __init__(self, max_altitude, **kwargs):
-        pass
+        self.max_altitude = max_altitude
+        super().__init__(**kwargs)
+
 
     def describe(self):
-        pass
+        return f"{super().describe()} | max altitude: {self.max_altitude}"
+
 
     def move(self):
-        pass
+        return f"{self.name} is flying"
+    
 
+
+#3.) multi inheritence
 class FlyingCar(Car, Aircraft):
     def __init__(self, **kwargs):
-        pass
+        super().__init__(**kwargs)
+        
+        # flag
+        self.mode_value = "road"
+    
+    
+    def mode(self):
+        return f"{self.mode_value}"
+        
 
     def toggle_mode(self):
-        pass
+        if self.mode_value == "road":
+            self.mode_value = "air"
+            return self.mode()
+        else:
+            self.mode_value = "road"
+            return self.mode()
+
 
     def move(self):
-        pass
+        if self.mode_value == "road":
+            return f"{self.name} is moving"
+        else:
+            return f"{self.name} is flying"
     
     
 
@@ -104,6 +178,10 @@ class FlyingCar(Car, Aircraft):
     
 # Example #1:
 car = Car(name="Civic", fuel=FuelType.GAS, horsepower=150)
-car.describe()
-print(car)
+# print(car.describe())
 # Expected Output: "Civic [GAS] | wheels: 4"
+
+fc = FlyingCar(name="SkyRider", fuel=FuelType.HYBRID, horsepower=300, max_altitude=10000)
+print(fc.move())        #  →  "SkyRider is moving"      (same as Car.move)
+print(fc.toggle_mode()) #      fc.mode        →  "air"
+
