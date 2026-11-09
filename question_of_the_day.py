@@ -1,85 +1,99 @@
-from abc import ABC, abstractmethod
-from collections import deque
 
-class Container(ABC):
-    
-    @abstractmethod
-    def add(self, item):
-        pass
-    
-    def remove(self):
-        pass
-    
-    def isempty(self):
-        pass
-    
-    
-class Stack(Container):
+
+class Node():
+    def __init__(self, value):
+        self.value = value 
+        self.next = None
+       
+       
+        
+class LinkedList:
     
     def __init__(self):
-        # this super refers to the item that is being inherited from the parent class 
-        super().__init__()
-        self.stack = []
-        
-    def add(self, item):
-        self.stack.append(item)
-        
-    def remove(self):
-        if not self.isempty():
-            return self.stack.pop() 
-        
+        self.current = None
     
-    def isempty(self):
+     
+    def append(self, value):
+        # composition
+        node = Node(value)
         
-        if len(self.stack) == 0:
-            return True 
-        else:
-            return False 
-        
-
-class Queue(Container):
-    
-    def __init__(self):
-        super().__init__()
-        self.queue = []
-        
-    def add(self, item):
-        self.queue.append(item)
-        
-    def remove(self):
-        if len(self.queue)!= 0:
-            return self.queue.pop(0)
+        if self.current == None:
+            self.current = node
             
-    def isempty(self):
-        return len(self.queue) == 0 
-
-
-# container is an object of class Queue or Stack, so can use its remove method 
-def drain(Container):
-    
-    drained_items = []
-    
-    while Container.isempty() != True:
-        removed_item = Container.remove()
-        drained_items.append(removed_item)
+        else:
+            runner = self.current 
+            
+            # we keep on moving to the right till we get all the way to the end. which will be the latest value. THAN we go below and do the .next 
+            while runner.next is not None:
+                runner = runner.next   
+                
+            runner.next = node  
+         
+            
+     
+    def to_list(self):
         
-    return drained_items
+        self.container = []
+        
+        runner = self.current 
+        
+        while runner:
+            self.container.append(runner.value)
+            runner = runner.next
+            
+        
+        return self.container
+              
+    
+    
+    def __len__(self):
+        
+        counter = 0 
+        
+        runner = self.current 
+        
+        while runner:
+            counter += 1
+            runner = runner.next 
+    
+    
+        return counter 
+    
+    
+
+class SortedLinkedList(LinkedList):
+    
+    def append(self, value):
+        new_node = Node(value)
+                
+        if self.current is None or value < self.current.value:
+            new_node.next = self.current
+            self.current = new_node
+            return
+                
+        # walk to the node just before the insert spot
+        current = self.current
+        while current.next is not None and current.next.value < value:
+                current = current.next
+                    
+                
+        # splice in
+        new_node.next = current.next
+        current.next = new_node
+        
+    
+        
+        
+           
 
 
 
-s = Stack()
-q = Queue()
-for x in [1, 2, 3]:
-    s.add(x)
-    q.add(x)
-print(drain(s))
-print(drain(q))
-print(s.isempty())
-print(q.remove())
-
-
-# # output 
-# [3, 2, 1]
-# [1, 2, 3]
-# True
-# None
+ll = LinkedList()
+sl = SortedLinkedList()
+for x in [3, 1, 2]:
+    ll.append(x)
+    sl.append(x)
+print(ll.to_list())
+print(sl.to_list())
+print(len(sl))
+print(isinstance(sl, LinkedList))
