@@ -1,65 +1,85 @@
-# Question 1: Encapsulation + Stack
+from abc import ABC, abstractmethod
+from collections import deque
+
+class Container(ABC):
+    
+    @abstractmethod
+    def add(self, item):
+        pass
+    
+    def remove(self):
+        pass
+    
+    def isempty(self):
+        pass
+    
+    
+class Stack(Container):
+    
+    def __init__(self):
+        # this super refers to the item that is being inherited from the parent class 
+        super().__init__()
+        self.stack = []
+        
+    def add(self, item):
+        self.stack.append(item)
+        
+    def remove(self):
+        if not self.isempty():
+            return self.stack.pop() 
+        
+    
+    def isempty(self):
+        
+        if len(self.stack) == 0:
+            return True 
+        else:
+            return False 
+        
+
+class Queue(Container):
+    
+    def __init__(self):
+        super().__init__()
+        self.queue = []
+        
+    def add(self, item):
+        self.queue.append(item)
+        
+    def remove(self):
+        if len(self.queue)!= 0:
+            return self.queue.pop(0)
+            
+    def isempty(self):
+        return len(self.queue) == 0 
+
+
+# container is an object of class Queue or Stack, so can use its remove method 
+def drain(Container):
+    
+    drained_items = []
+    
+    while Container.isempty() != True:
+        removed_item = Container.remove()
+        drained_items.append(removed_item)
+        
+    return drained_items
 
 
 
-# ["homepage", "a.com", "b.com"] 
-class BrowserHistory():
-    def __init__(self, homepage):
-        
-        self.current = homepage        
-        self.forward_stack = [] 
-        self.back_stack = []
-    
-    
-    def visit(self, url):
-        # update back with last value we were on 
-        self.back_stack.append(self.current)
-        # change current to the url
-        self.current = url 
-        # clear foward 
-        self.forward_stack.clear()
-    
-    
-    def back(self):
-        
-        if len(self.back_stack) == 0:
-            return None
-        
-        self.forward_stack.append(self.current)
-        self.current = self.back_stack.pop()
-        return self.current
-        
-    
-    def forward(self):
-        
-        if len(self.forward_stack) == 0:
-            return None 
-        
-        self.back_stack.append(self.current)
-        self.current = self.forward_stack.pop()
-        return self.current
-    
-    
-    def current(self):
-        return self.current
-    
-    
-h = BrowserHistory("home.com")
-h.visit("a.com")
-h.visit("b.com")
-print(h.back())
-print(h.back())
-print(h.back())
-print(h.forward())
-h.visit("c.com")
-print(h.forward())
-print(h.current)
+s = Stack()
+q = Queue()
+for x in [1, 2, 3]:
+    s.add(x)
+    q.add(x)
+print(drain(s))
+print(drain(q))
+print(s.isempty())
+print(q.remove())
 
 
-# example output: 
-# a.com
-# home.com
+# # output 
+# [3, 2, 1]
+# [1, 2, 3]
+# True
 # None
-# a.com
-# None
-# c.com
