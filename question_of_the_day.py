@@ -1,45 +1,49 @@
+# Question 1: Encapsulation + Stack
 
 
+
+# ["homepage", "a.com", "b.com"] 
 class BrowserHistory():
     def __init__(self, homepage):
-        self.page = homepage
-        self.__back_stack = []
-        self.__forward_stack = []
+        
+        self.current = homepage        
+        self.forward_stack = [] 
+        self.back_stack = []
     
     
     def visit(self, url):
-             
-        self.__back_stack.append(self.page)
-        self.page = url
-        self.__forward_stack.clear()   # new visit wipes forward history
+        # update back with last value we were on 
+        self.back_stack.append(self.current)
+        # change current to the url
+        self.current = url 
+        # clear foward 
+        self.forward_stack.clear()
+    
     
     def back(self):
         
-        if len(self.__back_stack) == 0:
-            return None 
+        if len(self.back_stack) == 0:
+            return None
         
-        else:
-            self.__forward_stack.append(self.page)
-            self.page = self.__back_stack.pop()
-            return self.page
+        self.forward_stack.append(self.current)
+        self.current = self.back_stack.pop()
+        return self.current
         
-
+    
     def forward(self):
         
-        if len(self.__forward_stack) == 0:
+        if len(self.forward_stack) == 0:
             return None 
         
-        else:
-            self.__back_stack.append(self.page)
-            self.page = self.__forward_stack.pop()
-            return self.page
+        self.back_stack.append(self.current)
+        self.current = self.forward_stack.pop()
+        return self.current
     
     
     def current(self):
-        return self.page 
+        return self.current
     
     
-
 h = BrowserHistory("home.com")
 h.visit("a.com")
 h.visit("b.com")
@@ -49,10 +53,10 @@ print(h.back())
 print(h.forward())
 h.visit("c.com")
 print(h.forward())
-print(h.current())
+print(h.current)
 
 
-#NOTE: Example Output 
+# example output: 
 # a.com
 # home.com
 # None
