@@ -1,65 +1,100 @@
-# Question 1: Encapsulation + Stack
+
+from abc import ABC, abstractmethod
+from collections import deque
+
+class Container(ABC):
+    
+    @abstractmethod
+    def add(self, item):
+        pass
+
+    @abstractmethod
+    def remove():
+        pass
+
+    @abstractmethod
+    def is_empty():
+        pass
 
 
-
-# ["homepage", "a.com", "b.com"] 
-class BrowserHistory():
-    def __init__(self, homepage):
-        
-        self.current = homepage        
-        self.forward_stack = [] 
-        self.back_stack = []
+class Stack(Container):
     
+    def __init__(self):
+        self.stack = []
     
-    def visit(self, url):
-        # update back with last value we were on 
-        self.back_stack.append(self.current)
-        # change current to the url
-        self.current = url 
-        # clear foward 
-        self.forward_stack.clear()
+    def add(self, item):
+        self.stack.append(item)
     
-    
-    def back(self):
-        
-        if len(self.back_stack) == 0:
+    def remove(self):
+        if not self.stack:
             return None
-        
-        self.forward_stack.append(self.current)
-        self.current = self.back_stack.pop()
-        return self.current
-        
+        return self.stack.pop()
     
-    def forward(self):
-        
-        if len(self.forward_stack) == 0:
-            return None 
-        
-        self.back_stack.append(self.current)
-        self.current = self.forward_stack.pop()
-        return self.current
+    def is_empty(self):
+        return len(self.stack) == 0 
     
+     
+
+class Queue(Container):
     
-    def current(self):
-        return self.current
+    def __init__(self):
+        self.queue = deque()
     
+    def add(self, item):
+        self.queue.append(item)
     
-h = BrowserHistory("home.com")
-h.visit("a.com")
-h.visit("b.com")
-print(h.back())
-print(h.back())
-print(h.back())
-print(h.forward())
-h.visit("c.com")
-print(h.forward())
-print(h.current)
+    def remove(self):
+        if not self.queue:
+            return None
+        return self.queue.popleft() # removes first first value added 
+    
+    def is_empty():
+        return len(self.queue) == 0 
 
 
-# example output: 
-# a.com
-# home.com
+
+
+def drain(container):
+    
+    if isinstance(container, Stack):
+        
+        new_stack = []
+        stack = container.stack
+        new_stack.append(stack[::-1])
+        container.stack = []
+        return new_stack[0]
+        
+        
+    
+    if isinstance(container, Queue):
+        
+        old_container = container.queue
+            
+        # reset
+        container.queue = []
+            
+            
+        return old_container
+        
+    
+   
+    
+
+s = Stack()
+q = Queue()
+for x in [1, 2, 3]:
+    s.add(x)
+    q.add(x)
+print(drain(s))
+print(drain(q))
+print(s.is_empty())
+# print(s.stack)
+# print(q.queue)
+print(q.remove())
+
+
+# output
+# [3, 2, 1]
+# [1, 2, 3]
+# True
 # None
-# a.com
-# None
-# c.com
