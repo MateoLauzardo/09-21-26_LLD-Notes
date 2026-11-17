@@ -1,80 +1,61 @@
-import heapq 
 
 
+class OrderLine():
 
-class Patient():
-
-    def __init__(self, name):
+    def __init__(self, name, price, quanity):
         self.name = name 
-
-    def priority(self):
-        raise NotImplementedError  
-
+        self.price = price 
+        self.quanity = quanity 
 
 
-class CriticalPatient(Patient):
-
-    def priority(self):
-        return 1 
-
-class UrgentPatient(Patient):
-
-    def priority(self):
-        return 2 
-
-class RoutinePatient(Patient):
-
-    def priority(self):
-        return 3 
+    def subtotal(self):
+        return self.price * self.quanity
 
 
-class ERQueue():
 
+class Order():
     def __init__(self):
-        self.heap = []
-        self.count = 0 
+        self.lines = {}
 
-    def admit(self, patient):
+    def add_item(self, name, price, quanity):
 
-        # patient is an object 
-        # so patient.priority
-        # need to compare priorities
-        # if patient.priority() < other_patient.priority():
-        # add to heap
-        self.count += 1
+        if name not in self.lines:
+            # name : object
+            self.lines[name] = OrderLine(name, price, quanity)
 
-
-        #NOTE: this is how you add a patient to the heap, with their priority, a count to break ties, and their name
-        heapq.heappush(self.heap, (patient.priority(), self.count, patient.name)) 
-
-
-
-    def next_patient(self):
-        #NOTE if the heap is not empty, pop the patient with the highest priority (lowest number) and return their name
-        if self.heap:
-            return heapq.heappop(self.heap)[2]
         else:
-            return None 
-
-     
+            self.lines[name].quanity += quanity
 
 
 
-er = ERQueue()
-er.admit(RoutinePatient("Ava"))
-er.admit(CriticalPatient("Ben"))
-er.admit(UrgentPatient("Cal"))
-er.admit(CriticalPatient("Dee"))
-print(er.next_patient())
-print(er.next_patient())
-print(er.next_patient())
-print(er.next_patient())
-print(er.next_patient())
+    def item_count(self):
+        return len(self.lines) 
 
 
-#NOTE: example output 
-# Ben
-# Dee
-# Cal
-# Ava
-# None
+
+    def total(self):
+
+        total = 0 
+
+        # items are objects
+        for name, line in self.lines.items():
+            total += line.subtotal()
+
+
+        return total 
+
+
+
+
+o = Order()
+o.add_item("pen", 1.5, 2)
+o.add_item("book", 10, 1)
+o.add_item("pen", 1.5, 3)
+print(o.item_count())
+print(o.lines["pen"].quanity)
+print(o.total())
+
+
+# 2
+# 5
+# 17.5
