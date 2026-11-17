@@ -1,95 +1,151 @@
 
-#NOTE -> review linked list
 
-class Node:
-    def __init__(self, value):
-        self.value = value 
-        self.next = None
+
+
+from abc import ABC, abstractmethod 
+
+# remembers the exact order in which 
+# key-value pairs are inserted
+from collections import OrderedDict 
+
+
+
+class Cache(ABC):
     
-        
-class LinkedList:
+    def __init__(self, capacity):
+        self.capacity = capacity
     
-    def __init__(self):
-        self.head = None 
-        
-        
-    def append(self, value):
-        
-        new_node = Node(value)
-        
-        if self.head == None:
-            self.head = new_node 
-        
-        else:
-            current = self.head 
-           
-            while current.next is not None:
-               current = current.next 
-               
-            current.next = new_node
-                    
+    @abstractmethod
+    def get(self, key):
+        pass 
     
-    def to_list(self):
-        to_list = []
+    @abstractmethod
+    def put(self, key, value):
+        pass 
+    
+    @abstractmethod
+    def keys(self):
+        pass 
+
+
+# count as a “use.” When the cache is full 
+# and a new key is added, evict the key that was 
+# inserted first.
+class LRUCache(Cache):
+    
+    def __init__(self, capacity):
+        self.capacity = capacity
+    
+        self.hashmap = OrderedDict()
+    
+    def get(self, keys):
         
-        current = self.head 
+        # if key not in hashmap     
+        if keys not in self.hashmap:
+            return -1
         
-        while current:
-            to_list.append(current.value)
-            current = current.next
-           
-        return to_list
+        # returns value MUST push to back
+        self.hashmap.move_to_end(keys)
+        return self.hashmap[keys]    
         
+    
+    def put(self, key, value):
+        
+        # repalces key values 
+        if key in self.hashmap:
+            self.hashmap[key] = value 
+            self.hashmap.move_to_end(key) # updates the position.
+            return 
+        
+        # if capacity is full remove first 
+        if len(self.hashmap) >= self.capacity:
+            self.hashmap.popitem(last=False)
+        
+         
+        # adds the new every time 
+        self.hashmap[key] = value 
+        
+
+    
+    def keys(self):
+        key_box = []
+        
+        for key, value in self.hashmap.items():
+            key_box.append(key)
+            
+        return key_box
              
     
-    def __len__(self):
-        count = 0 
-        
-        
-        current = self.head 
-        
-        while current:
-            count += 1 
-            current = current.next
-           
-        return count
+    
+
+# (First In, First Out). Only inserting a new key 
+# affects order. When the cache is full, 
+# evict the key that was inserted first.
+class FIFOCache(Cache):
+    
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.hashmap = OrderedDict()
     
     
+    def get(self, keys):
+        
+        if keys not in self.hashmap:
+            return -1 
+        
+        return self.hashmap[keys] 
     
-class SortedLinkedList(LinkedList):
-    def append(self, value):
+    
+    def put(self, key, value):
         
-        new_node = Node(value)
-        
-        
-        # Case 1: empty list, or new value belongs before the head
-        if self.head is None or value < self.head.value:
-            new_node.next = self.head
-            self.head = new_node
+        # repalces key values (do not need to send any value to the back of the line)
+        if key in self.hashmap:
+            self.hashmap[key] = value 
             return
         
-        
-        # Case 3: walk to the node just before the insertion spot
-        current = self.head
-        while current.next is not None and current.next.value < value:
-            current = current.next
-            
-            
-        # Insert between current and current.next   
-        new_node.next = current.next
-        current.next = new_node
-        
-        
+        # if capacity is full remove first 
+        if len(self.hashmap) >= self.capacity:
+            self.hashmap.popitem(last=False)
+                
+                 
+        # adds the new every time 
+        self.hashmap[key] = value 
 
+
+    def keys(self):
+        key_box = []
+                
+        for key, value in self.hashmap.items():
+            key_box.append(key)
+                    
+        return key_box 
+
+
+
+
+
+lru = LRUCache(2)
+lru.put("a", 1)
+lru.put("b", 2)
+print(lru.get("a"))
+lru.put("c", 3)
+print(lru.get("b"))
+print(lru.keys())
+
+fifo = FIFOCache(2)
+fifo.put("a", 1)
+fifo.put("b", 2)
+fifo.get("a")
+fifo.put("c", 3)
+print(fifo.get("a"))
+print(fifo.keys())
+
+
+#NOTE example output 
+# 1
+# -1
+# ['a', 'c']
+# -1
+# ['b', 'c']
     
     
-    
-ll = LinkedList()
-sl = SortedLinkedList()
-for x in [3, 1, 2]:
-    ll.append(x)
-    sl.append(x)
-print(ll.to_list())
-print(sl.to_list())
-print(len(sl))
-print(isinstance(sl, LinkedList))
