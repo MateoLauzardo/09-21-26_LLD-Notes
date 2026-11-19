@@ -26,3 +26,38 @@ class Thermostat():
         else:
             self.__temperature = value  
     
+    
+    # NOTE: getters make the method read only 
+    # turn the temp into celsius and return 
+    @property
+    def celsius(self):
+        num = (self.__temperature - 32) * 5/9
+        rounded_num = round(num, 1)
+        
+        return rounded_num
+        
+        
+
+t = Thermostat(70)
+print(t.temperature)
+t.temperature = 75
+print(t.temperature)
+print(t.celsius)
+try:
+    t.temperature = 120
+except ValueError:
+    print("Out of range")
+print(t.temperature)
+try:
+    t.celsius = 30
+except AttributeError:
+    print("celsius is read-only")
+    
+
+# example output: 
+# 70
+# 75
+# 23.9
+# Out of range
+# 75
+# celsius is read-only
