@@ -1,94 +1,105 @@
 
-
-
-# Question 4: Polymorphism Through Inheritance and Duck Typing
+# Question 5: Abstract Base Classes as Contracts
 
 from abc import ABC, abstractclassmethod
 
 
-class Employee(ABC):
-    
-    def __init__(self, name):
-        self.name = name 
+
+
+# NOTE - DONE
+class PaymentMethod(ABC):
     
     @abstractclassmethod
-    def monthlyPay(self):
+    def name(self):
+        pass
+    
+    @abstractclassmethod
+    def pay(self, amount):
         pass 
     
     @abstractclassmethod
-    def pay_stub(self):
-        pass
+    def checkout(self, amount):
+        pass 
     
-
-# needs to override monthly pay
-class FullTime(Employee):
     
-    def __init__(self, name, salary):
-        # super().__init__(name)
-        self.name = name
-        self.salary = salary
-        
-    # return salary // 12 
-    def monthlyPay(self):
-        return self.salary // 12  
     
-    def pay_stub(self):
-        return f"{self.name}: {FullTime.monthlyPay(self)}"
-
-# needs to override monthly pay
-class Hourly(Employee):
+# NOTE - DONE    
+class CreditCard(PaymentMethod):
     
-    def __init__(self, name, rate, hours):
-        # super().__init__(name)
-        self.name = name
-        self.rate = rate 
-        self.hours = hours 
-        
-    def monthlyPay(self):
-            return self.rate * self.hours  
-    
-    def pay_stub(self):
-            return f"{self.name}: {Hourly.monthlyPay(self)}"
-        
-
-#NOTE does not inherit
-class Contractor():
-    
-    def __init__(self, name, pay):
-        self.name = name 
-        self.pay = pay 
-        
-    # own function, same name 
-    def monthlyPay(self):
-        return self.pay
-    
-    def pay_stub(self):
-        return f"{self.name}: {Contractor.monthlyPay(self)}"
-
-
-# function -> workers is a list full of objects 
-def payroll(workers):
-    
-    total = 0 
-    
-    for w in workers:
-        total += w.monthlyPay()
-        
-    return total
-        
-    
+    def __init__(self, limit):
+        self.limit = limit 
+        self.money_spent = 0
          
-         
-workers = [FullTime("Ana", 60000), Hourly("Ben", 20, 80), Contractor("Cy", 3000)]
-for w in workers:
-    print(w.pay_stub())
-print(payroll(workers))
-print(isinstance(workers[2], Employee))
+    def name(self):
+        return "Credit Card" 
+    
+    def pay(self, amount):
+        
+        self.money_spent += amount 
+        
+        if self.money_spent > self.limit:
+            return False 
+        else: 
+            return True 
+    
+    def checkout(self, amount):
+        
+        if self.pay(amount) == False:
+            return f"Payment failed"
+        else:
+            return f"Paid {amount} with {self.name()}"    
+    
+    
+# NOTE - DONE 
+class GiftCard(PaymentMethod):
+    
+    def __init__(self, balance):
+        self.balance = balance
+        self.total_money_spent = 0
+        
+    def name(self):
+        return "GiftCard" 
+        
+    def pay(self, amount):
+        
+        self.total_money_spent += amount
+        
+        if self.total_money_spent < self.balance:
+            return True 
+        else:
+            return False 
+        
+    def checkout(self, amount):
+        
+        if self.pay(amount) == False:
+            return f"Payment failed"
+        else:
+            return f"Paid {amount} with {self.name()}"
+    
+    
 
 
-#example output 
-# Ana: 5000
-# Ben: 1600
-# Cy: 3000
-# 9600
-# False
+cc = CreditCard(500)
+gc = GiftCard(50)
+print(cc.checkout(200))
+print(cc.checkout(400))
+print(gc.checkout(30))
+print(gc.checkout(30))
+
+class Broken(PaymentMethod):
+    def name(self):
+        return "Broken"
+
+try:
+    b = Broken()
+except TypeError:
+    print("Cannot create Broken")
+    
+    
+    
+# output 
+# Paid 200 with Credit Card
+# Payment failed
+# Paid 30 with Gift Card
+# Payment failed
+# Cannot create Broken
