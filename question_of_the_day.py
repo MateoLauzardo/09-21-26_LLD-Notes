@@ -1,77 +1,94 @@
 
-class Account():
+
+
+# Question 4: Polymorphism Through Inheritance and Duck Typing
+
+from abc import ABC, abstractclassmethod
+
+
+class Employee(ABC):
     
-    def __init__(self, balance):
-        self.balance = balance
-        
-    def withdraw(self, amount):
-        
-        if amount < self.balance:
-            self.balance -= amount 
-            return True
-        else:
-            return False 
-        
-        
-class SavingsAccount(Account):
-    def __init__(self, balance):
-        self.balance = balance
-        self.count = 0 
+    def __init__(self, name):
+        self.name = name 
     
+    @abstractclassmethod
+    def monthlyPay(self):
+        pass 
     
-    def withdraw(self, amount):
-        
-        if self.count >= 3:
-            return False 
-        
-        else:
-            answer = super().withdraw(amount)
-            
-            if answer == True:
-                self.count += 1
-                
-        return answer 
-        
-
-
-class CheckingAccount(Account):
+    @abstractclassmethod
+    def pay_stub(self):
+        pass
     
-    def __init__(self, balance, overdraft_limit):
-        self.balance = balance
-        self.overdraft_limit = overdraft_limit
 
-    # not goingto call super cuz this is overriding 
-    def withdraw(self, amount):
-        
-        updated_balance = self.balance - amount 
-        
-
-        if updated_balance < -self.overdraft_limit:
-            return False 
-        
-        else:
-            self.balance = updated_balance
-            return True
+# needs to override monthly pay
+class FullTime(Employee):
     
+    def __init__(self, name, salary):
+        # super().__init__(name)
+        self.name = name
+        self.salary = salary
+        
+    # return salary // 12 
+    def monthlyPay(self):
+        return self.salary // 12  
     
-s = SavingsAccount(100)
-print(s.withdraw(10))
-s.withdraw(10)
-s.withdraw(10)
-print(s.withdraw(10))
-print(s.balance)
+    def pay_stub(self):
+        return f"{self.name}: {FullTime.monthlyPay(self)}"
 
-c = CheckingAccount(100, overdraft_limit=50)
-print(c.withdraw(140))
-print(c.balance)
-print(c.withdraw(20))
+# needs to override monthly pay
+class Hourly(Employee):
+    
+    def __init__(self, name, rate, hours):
+        # super().__init__(name)
+        self.name = name
+        self.rate = rate 
+        self.hours = hours 
+        
+    def monthlyPay(self):
+            return self.rate * self.hours  
+    
+    def pay_stub(self):
+            return f"{self.name}: {Hourly.monthlyPay(self)}"
+        
+
+#NOTE does not inherit
+class Contractor():
+    
+    def __init__(self, name, pay):
+        self.name = name 
+        self.pay = pay 
+        
+    # own function, same name 
+    def monthlyPay(self):
+        return self.pay
+    
+    def pay_stub(self):
+        return f"{self.name}: {Contractor.monthlyPay(self)}"
 
 
-#output 
-# True
-# False
-# 70
+# function -> workers is a list full of objects 
+def payroll(workers):
+    
+    total = 0 
+    
+    for w in workers:
+        total += w.monthlyPay()
+        
+    return total
+        
+    
+         
+         
+workers = [FullTime("Ana", 60000), Hourly("Ben", 20, 80), Contractor("Cy", 3000)]
+for w in workers:
+    print(w.pay_stub())
+print(payroll(workers))
+print(isinstance(workers[2], Employee))
 
-# True
-# -40
+
+#example output 
+# Ana: 5000
+# Ben: 1600
+# Cy: 3000
+# 9600
 # False
