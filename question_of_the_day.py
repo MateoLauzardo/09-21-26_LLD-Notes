@@ -1,105 +1,104 @@
 
-# Question 5: Abstract Base Classes as Contracts
 
-from abc import ABC, abstractclassmethod
-
+# Question 6: Composition and Aggregation in One Class
 
 
 
-# NOTE - DONE
-class PaymentMethod(ABC):
+# going to use comp and aggregation 
+
+
+
+class CPU:
+    def __init__(self, model):
+        self.model = model
+
+
+class RAM:
+    def __init__(self, size_gb):
+        self.size_gb = size_gb 
+
+
+class Peripheral:
+    def __init__(self, name):
+        self.name = name  
+
+
+
+class Computer():
     
-    @abstractclassmethod
-    def name(self):
-        pass
-    
-    @abstractclassmethod
-    def pay(self, amount):
-        pass 
-    
-    @abstractclassmethod
-    def checkout(self, amount):
-        pass 
-    
-    
-    
-# NOTE - DONE    
-class CreditCard(PaymentMethod):
-    
-    def __init__(self, limit):
-        self.limit = limit 
-        self.money_spent = 0
-         
-    def name(self):
-        return "Credit Card" 
-    
-    def pay(self, amount):
+    def __init__(self, cpu_model=None, ram_gb=None):
+        self.cpu_model = cpu_model
+        self.ram_gb = ram_gb
         
-        self.money_spent += amount 
-        
-        if self.money_spent > self.limit:
-            return False 
-        else: 
-            return True 
+        self.spec_list = []
+        self.device_list = []
+
     
-    def checkout(self, amount):
+    def specs(self):
         
-        if self.pay(amount) == False:
-            return f"Payment failed"
-        else:
-            return f"Paid {amount} with {self.name()}"    
+        #NOTE comp ('owns a')
+        if self.cpu_model is not None:
+            self.cpu = CPU(self.cpu_model)
+            self.spec_list.append(f"{self.cpu.model} CPU")
+        
+        if self.ram_gb is not None:
+            self.ram = RAM(self.ram_gb) 
+            self.spec_list.append(f"{self.ram.size_gb}GB RAM")
+            
+        return ", ".join(self.spec_list)
     
     
-# NOTE - DONE 
-class GiftCard(PaymentMethod):
     
-    def __init__(self, balance):
-        self.balance = balance
-        self.total_money_spent = 0
+    
+    # NOTE - DONE
+    
+    # device is an object, we get this from aggregation NOT comp so if we loose computer still will work 
+    def plug_in(self, device):
         
-    def name(self):
-        return "GiftCard" 
+        # if string not in list, add string into list 
+        if device not in self.device_list:
+            self.device_list.append(device.name) 
         
-    def pay(self, amount):
-        
-        self.total_money_spent += amount
-        
-        if self.total_money_spent < self.balance:
-            return True 
+        # if device already plugged in 
         else:
             return False 
+    
+    def unplug(self, device):
+    
+        # if device is not plugged in 
+        if device.name not in self.device_list:
+            return False 
         
-    def checkout(self, amount):
-        
-        if self.pay(amount) == False:
-            return f"Payment failed"
-        else:
-            return f"Paid {amount} with {self.name()}"
+        # remove device string from device list 
+        else:            
+            self.device_list.remove(device.name)
+            return True
+            
+    # just return the device list array 
+    def devices(self):
+        return self.device_list 
     
     
 
-
-cc = CreditCard(500)
-gc = GiftCard(50)
-print(cc.checkout(200))
-print(cc.checkout(400))
-print(gc.checkout(30))
-print(gc.checkout(30))
-
-class Broken(PaymentMethod):
-    def name(self):
-        return "Broken"
-
-try:
-    b = Broken()
-except TypeError:
-    print("Cannot create Broken")
     
-    
-    
+pc = Computer("i7", 16)
+mouse = Peripheral("Mouse")
+kb = Peripheral("Keyboard")
+print(pc.specs())
+pc.plug_in(mouse)
+pc.plug_in(kb)
+print(pc.devices())
+print(pc.unplug(mouse))
+print(pc.unplug(mouse))
+print(pc.devices())
+del pc
+print(kb.name)
+
+
 # output 
-# Paid 200 with Credit Card
-# Payment failed
-# Paid 30 with Gift Card
-# Payment failed
-# Cannot create Broken
+# i7 CPU, 16GB RAM
+# ['Mouse', 'Keyboard']
+# True
+# False
+# ['Keyboard']
+# Keyboard
